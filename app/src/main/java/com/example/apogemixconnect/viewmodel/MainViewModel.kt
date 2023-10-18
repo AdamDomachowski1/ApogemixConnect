@@ -21,6 +21,10 @@ class MainViewModel : ViewModel() {
         }
     }
 
+    fun clearMessage() = viewModelScope.launch(Dispatchers.Main) {
+        _messages.value = Pair(false,"")
+    }
+
     fun setStatus(status: Boolean) = viewModelScope.launch(Dispatchers.Main) {
         _socketStatus.value = status
     }

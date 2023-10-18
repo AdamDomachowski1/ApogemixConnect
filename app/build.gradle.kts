@@ -51,6 +51,7 @@ android {
 
 dependencies {
     implementation("com.squareup.okhttp3:okhttp:4.11.0")
+    implementation("androidx.compose.runtime:runtime-livedata:1.5.3")
 
     implementation("androidx.core:core-ktx:1.9.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
