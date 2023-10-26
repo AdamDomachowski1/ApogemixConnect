@@ -128,6 +128,7 @@ class MainActivity : ComponentActivity() {
             onClick = {
                 webSocket?.close(1000, "Canceled manually.")
                 viewModel.clearMessage()
+                viewModel.resetFlightData()
             }) {
             Text(text = "Disconnect")
         }

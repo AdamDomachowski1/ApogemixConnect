@@ -55,4 +55,9 @@ class MainViewModel : ViewModel() {
         )
 
     }
+
+    fun resetFlightData() {
+        _flightData.value = FlightDatas("", 0f, 0f, 0f, 0, 0f, 0f, 0f, 0f, 0, 0)
+    }
+
 }
