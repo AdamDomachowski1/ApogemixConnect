@@ -21,7 +21,9 @@ class WebSocketListener(
 
     override fun onMessage(webSocket: WebSocket, text: String) {
         super.onMessage(webSocket, text)
-        viewModel.addMessage(Pair(false, text))
+        val flightData = viewModel.splitDatas(text)
+        viewModel.setFlightData(flightData)
+        viewModel.handleIncomingMessage(Pair(false, text))
         Log.d(TAG, "onMessage: $text")
     }
 

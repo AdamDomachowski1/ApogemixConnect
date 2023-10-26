@@ -1,40 +1,44 @@
 package com.example.apogemixconnect.view
 
+// Android imports
+import android.nfc.Tag
 import android.os.Bundle
+import android.util.Log
+
+// Jetpack imports
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.lifecycle.ViewModelProvider
+
+// Compose UI imports
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.apogemixconnect.ui.theme.ApogemixConnectTheme
-import androidx.compose.material3.TextField
-import androidx.compose.runtime.getValue
+import androidx.compose.ui.unit.dp
+
+// Compose Foundation imports
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+
+// Compose Material3 imports
+import androidx.compose.material3.*
+
+// Compose Runtime imports
+import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.*
-import androidx.lifecycle.ViewModelProvider
+import com.example.apogemixconnect.Data.FlightDatas
+
+// Project-specific imports
+import com.example.apogemixconnect.ui.theme.ApogemixConnectTheme
 import com.example.apogemixconnect.model.WebSocketListener
 import com.example.apogemixconnect.viewmodel.MainViewModel
+
+// Other imports
 import kotlinx.coroutines.MainScope
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.WebSocket
-import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.width
-import androidx.compose.ui.unit.dp
-
-
 
 
 class MainActivity : ComponentActivity() {
@@ -60,26 +64,35 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-
-    @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     fun MainScreen(viewModel: MainViewModel) {
         val coroutineScope = remember { MainScope() }
         val inputText = Input()
+        val urlText = remember { mutableStateOf("ws://192.168.4.1/ws") }  // Default URL value
 
         Column(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Top,
         ) {
+            InputURL(urlText) // Nowy komponent do wprowadzania adresu URL
             Input()
             SendCommand(inputText)
             Row {
-                ConnectButton()
+                ConnectButton(urlText.value) // Przesłanie wprowadzonego adresu URL
                 Spacer(modifier = Modifier.width(1.dp))
                 DisconnectButton(viewModel)
             }
-            DatasReached(viewModel)
+            DisplayFlightData(viewModel)
         }
+    }
+    @OptIn(ExperimentalMaterial3Api::class)
+    @Composable
+    fun InputURL(url: MutableState<String>) {
+        TextField(
+            value = url.value,
+            onValueChange = { url.value = it },
+            label = { Text("Enter WebSocket URL") }
+        )
     }
 
 
@@ -96,18 +109,17 @@ class MainActivity : ComponentActivity() {
         return text
     }
 
-
-
     @Composable
-    fun ConnectButton(){
+    fun ConnectButton(url: String) {
         Button(
             shape = RoundedCornerShape(0),
             onClick = {
-                webSocket = okHttpClient.newWebSocket(createRequest(), webSocketListener)
-        }) {
+                webSocket = okHttpClient.newWebSocket(createRequest(url), webSocketListener)
+            }) {
             Text(text = "Connect")
         }
     }
+
 
     @Composable
     fun DisconnectButton(viewModel: MainViewModel){
@@ -121,39 +133,51 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-
-
     @Composable
     fun SendCommand(inputText: MutableState<String>) {
         Button(
             shape = RoundedCornerShape(0),
             onClick = {
                 webSocket?.send(inputText.value)
-                viewModel.addMessage(Pair(true, inputText.value))
             }
         ) {
             Text(text = "SendCommand")
         }
     }
 
+//    @Composable
+//    fun RawDatasReached(viewModel: MainViewModel) {
+//        val message by viewModel.messages.observeAsState(Pair(false, ""))
+//        Text(text = message.second)
+//    }
 
     @Composable
-    fun DatasReached(viewModel: MainViewModel) {
-        val message by viewModel.messages.observeAsState(Pair(false, ""))
-        Text(text = message.second)
+    fun DisplayFlightData(viewModel: MainViewModel) {
+        val flightData by viewModel.flightData.observeAsState(FlightDatas("", 0f, 0f, 0f, 0, 0f, 0f, 0f, 0f, 0, 0))
+        Column(){
+            Text(text = "Name: ${flightData.name}")
+            Text(text = "GPS_Lat: ${flightData.gpsLat}")
+            Text(text = "GPS_Lng: ${flightData.gpsLng}")
+            Text(text = "GPS_Alt: ${flightData.gpsAlt}")
+            Text(text = "Time: ${flightData.time}")
+            Text(text = "Temperature: ${flightData.temperature}")
+            Text(text = "Pressure: ${flightData.pressure}")
+            Text(text = "Height: ${flightData.height}")
+            Text(text = "Speed: ${flightData.speed}")
+            Text(text = "Continuity: ${flightData.continuity}")
+            Text(text = "State: ${flightData.state}")
+        }
     }
 
-    private fun createRequest(): Request {
-        val websocketURL = "ws://192.168.4.1/ws"
+
+    private fun createRequest(adress: String): Request {
+        //val websocketURL = "ws://192.168.4.1/ws"
         return Request.Builder()
-            .url(websocketURL)
+            .url(adress)
             .build()
     }
 
-    @Preview(
-        showBackground = true,
-        showSystemUi = true
-    )
+    @Preview(showBackground = true, showSystemUi = true)
     @Composable
     fun Preview() {
         // Create a dummy viewModel for preview purposes
