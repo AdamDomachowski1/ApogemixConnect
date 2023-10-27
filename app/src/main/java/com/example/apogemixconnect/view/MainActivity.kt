@@ -27,11 +27,18 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navOptions
 import com.example.apogemixconnect.Data.FlightDatas
 
 // Project-specific imports
 import com.example.apogemixconnect.ui.theme.ApogemixConnectTheme
 import com.example.apogemixconnect.model.WebSocketListener
+import com.example.apogemixconnect.ui.theme.Screens.DetailScreen
+import com.example.apogemixconnect.ui.theme.Screens.ConnectionScreen
+import com.example.apogemixconnect.ui.theme.Screens.SettingsScreen
 import com.example.apogemixconnect.viewmodel.MainViewModel
 
 // Other imports
@@ -53,14 +60,34 @@ class MainActivity : ComponentActivity() {
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
         webSocketListener = WebSocketListener(viewModel)
         setContent {
-            ApogemixConnectTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    MainScreen(viewModel)
+            val navController = rememberNavController()
+            NavHost(navController = navController, startDestination = "ConnectionScreen"){
+                composable("ConnectionScreen"){
+                    ConnectionScreen(onClick = {
+                        navController.navigate(it)
+                    })
+                }
+                composable("detail"){
+                    DetailScreen()
+                }
+                composable("settings"){
+                    SettingsScreen(onClick = {
+                        navController.navigate(
+                            route = it,
+                            navOptions = navOptions{
+                                popUpTo("ConnectionScreen"){inclusive = true} //chodi o usuwanie poprzednich
+                            })
+                    })
                 }
             }
+//            ApogemixConnectTheme {
+//                Surface(
+//                    modifier = Modifier.fillMaxSize(),
+//                    color = MaterialTheme.colorScheme.background
+//                ) {
+//                    MainScreen(viewModel)
+//                }
+//            }
         }
     }
 
