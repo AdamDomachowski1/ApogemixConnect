@@ -1,12 +1,15 @@
 package com.example.apogemixconnect.viewmodel
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+
+import androidx.lifecycle.*
 import com.example.apogemixconnect.Data.FlightDatas
+import com.example.apogemixconnect.model.WebSocketListener
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.WebSocket
+
 
 class MainViewModel : ViewModel() {
 
@@ -18,6 +21,33 @@ class MainViewModel : ViewModel() {
 
     private val _flightData = MutableLiveData<FlightDatas>()
     val flightData: LiveData<FlightDatas> = _flightData
+
+    private val okHttpClient = OkHttpClient()
+    private var webSocket: WebSocket? = null
+    private val webSocketListener = WebSocketListener(this)
+
+    // Connect Function
+    fun connect(url: String) {
+        webSocket = okHttpClient.newWebSocket(createRequest(url), webSocketListener)
+    }
+
+    // Disconnect Function
+    fun disconnect() {
+        webSocket?.close(1000, "Canceled manually.")
+        clearMessage()
+        resetFlightData()
+    }
+
+    // Send Command Function
+    fun sendCommand(command: String) {
+        webSocket?.send(command)
+    }
+
+    private fun createRequest(adress: String): Request {
+        return Request.Builder()
+            .url(adress)
+            .build()
+    }
 
     fun handleIncomingMessage(message: Pair<Boolean, String>) = viewModelScope.launch(Dispatchers.Main) {
         if (_socketStatus.value == true) {
