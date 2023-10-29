@@ -1,4 +1,4 @@
-package com.example.apogemixconnect.ui.theme
+package com.example.apogemixconnect.ui.theme.Style
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

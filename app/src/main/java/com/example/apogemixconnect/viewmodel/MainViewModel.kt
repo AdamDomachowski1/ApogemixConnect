@@ -1,6 +1,7 @@
 package com.example.apogemixconnect.viewmodel
 
 
+import android.util.Log
 import androidx.lifecycle.*
 import com.example.apogemixconnect.Data.FlightDatas
 import com.example.apogemixconnect.model.WebSocketListener
@@ -12,6 +13,7 @@ import okhttp3.WebSocket
 
 
 class MainViewModel : ViewModel() {
+
 
     private val _socketStatus = MutableLiveData(false)
     val socketStatus: LiveData<Boolean> = _socketStatus
@@ -26,9 +28,13 @@ class MainViewModel : ViewModel() {
     private var webSocket: WebSocket? = null
     private val webSocketListener = WebSocketListener(this)
 
+
     // Connect Function
     fun connect(url: String) {
-        webSocket = okHttpClient.newWebSocket(createRequest(url), webSocketListener)
+        if (!_socketStatus.value!!) { // Tylko jeśli połączenie nie jest aktywne
+            webSocket = okHttpClient.newWebSocket(createRequest(url), webSocketListener)
+            Log.d("CUSTOM_TAG","Connection Try")
+        }
     }
 
     // Disconnect Function

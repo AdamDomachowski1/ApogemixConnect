@@ -1,4 +1,4 @@
-package com.example.apogemixconnect.ui.theme
+package com.example.apogemixconnect.ui.theme.Style
 
 import android.app.Activity
 import android.os.Build
