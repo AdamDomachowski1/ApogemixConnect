@@ -13,7 +13,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.apogemixconnect.ui.theme.Screens.ConnectionScreen.ConnectionButtons
 import com.example.apogemixconnect.ui.theme.Screens.ConnectionScreen.ConnectionStatus
-import com.example.apogemixconnect.ui.theme.Screens.ReciverDataScreen.DisplayFlightData
 
 // External libraries imports
 
@@ -28,7 +27,7 @@ fun SendCommandScreen(viewModel: MainViewModel, onClick: (String) -> Unit) {
     ) {
         ConnectionStatus(viewModel)
         CommandsButtons(viewModel = viewModel)
-        DisplayFlightData(viewModel)
+        //DisplayFlightData(viewModel)
     }
 }
 

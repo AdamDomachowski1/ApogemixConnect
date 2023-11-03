@@ -65,27 +65,6 @@ class MainActivity : ComponentActivity() {
             }
         }
 
-//        @Composable
-//        fun MainScreen(viewModel: MainViewModel) {
-//            val coroutineScope = remember { MainScope() }
-//            val inputText = Input()
-//            val urlText = remember { mutableStateOf("ws://192.168.4.1/ws") }  // Default URL value
-//
-//            Column(
-//                modifier = Modifier.fillMaxSize(),
-//                verticalArrangement = Arrangement.Top,
-//            ) {
-//                InputURL(urlText) // Nowy komponent do wprowadzania adresu URL
-//                Input()
-//                SendCommand(inputText)
-//                Row {
-//                    ConnectButton(urlText.value) // Przesłanie wprowadzonego adresu URL
-//                    Spacer(modifier = Modifier.width(1.dp))
-//                    DisconnectButton()
-//                }
-//                DisplayFlightData(viewModel)
-//            }
-//        }
 
         @OptIn(ExperimentalMaterial3Api::class)
         @Composable

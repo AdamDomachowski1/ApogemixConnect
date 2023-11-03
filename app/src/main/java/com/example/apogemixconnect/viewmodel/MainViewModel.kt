@@ -3,7 +3,6 @@ package com.example.apogemixconnect.viewmodel
 
 import android.util.Log
 import androidx.lifecycle.*
-import com.example.apogemixconnect.Data.FlightDatas
 import com.example.apogemixconnect.model.WebSocketListener
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -21,8 +20,8 @@ class MainViewModel : ViewModel() {
     private val _messages = MutableLiveData<Pair<Boolean, String>>()
     val messages: LiveData<Pair<Boolean, String>> = _messages
 
-    private val _flightData = MutableLiveData<FlightDatas>()
-    val flightData: LiveData<FlightDatas> = _flightData
+    private val _dataMap = MutableLiveData<Map<String, String>>()
+    val dataMap: LiveData<Map<String, String>> = _dataMap
 
     private val okHttpClient = OkHttpClient()
     private var webSocket: WebSocket? = null
@@ -41,7 +40,7 @@ class MainViewModel : ViewModel() {
     fun disconnect() {
         webSocket?.close(1000, "Canceled manually.")
         clearMessage()
-        resetFlightData()
+        resetData()
     }
 
     // Send Command Function
@@ -61,9 +60,25 @@ class MainViewModel : ViewModel() {
         }
     }
 
-    fun setFlightData(data: FlightDatas) = viewModelScope.launch(Dispatchers.Main) {
-        _flightData.value = data
+    fun updateData(dataString: String) {
+        Log.d("WebSocket", "Received data: $dataString")
+        val parts = dataString.split(";", limit = 2)
+        if (parts.size == 2) {
+            val transmitterName = parts[0]
+            val restOfData = parts[1]
+
+            // Get a copy of the current map or create a new one if null
+            val updatedMap = _dataMap.value?.toMutableMap() ?: mutableMapOf()
+
+            // Update the map with the new data
+            updatedMap[transmitterName] = restOfData
+
+            // Post the updated map back to MutableLiveData
+            _dataMap.postValue(updatedMap)
+            Log.d("WebSocket", "restOfData: $restOfData")
+        }
     }
+
 
     fun clearMessage() = viewModelScope.launch(Dispatchers.Main) {
         _messages.value = Pair(false,"")
@@ -73,27 +88,8 @@ class MainViewModel : ViewModel() {
         _socketStatus.value = status
     }
 
-    fun splitDatas(rawData: String): FlightDatas{
-        val DatasConvertedToArray = rawData.split(";")
-
-        return FlightDatas(
-            name = DatasConvertedToArray[0],
-            gpsLat = DatasConvertedToArray[1].toFloat(),
-            gpsLng = DatasConvertedToArray[2].toFloat(),
-            gpsAlt = DatasConvertedToArray[3].toFloat(),
-            time = DatasConvertedToArray[4].toInt(),
-            temperature = DatasConvertedToArray[5].toFloat(),
-            pressure = DatasConvertedToArray[6].toFloat(),
-            height = DatasConvertedToArray[7].toFloat(),
-            speed = DatasConvertedToArray[8].toFloat(),
-            continuity = DatasConvertedToArray[9].toInt(),
-            state = DatasConvertedToArray[10].toInt()
-        )
-
-    }
-
-    fun resetFlightData() {
-        _flightData.value = FlightDatas("", 0f, 0f, 0f, 0, 0f, 0f, 0f, 0f, 0, 0)
+    fun resetData() {
+        _dataMap.postValue(emptyMap())
     }
 
 }
