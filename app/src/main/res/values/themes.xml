@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <style name="Theme.ApogemixConnect" parent="android:Theme.Material.Light.NoActionBar" />
+    <!-- Użyj gotowego ciemnego motywu bez paska akcji. -->
+    <style name="Theme.ApogemixConnect" parent="android:Theme.Material.NoActionBar">
+        <item name="android:windowBackground">@color/black</item> <!-- Ustaw tło okna na czarne. -->
+    </style>
 </resources>

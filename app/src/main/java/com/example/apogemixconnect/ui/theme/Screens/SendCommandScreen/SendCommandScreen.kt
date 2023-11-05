@@ -11,6 +11,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.apogemixconnect.ui.theme.Screens.ConnectionScreen.ConnectionButtons
 import com.example.apogemixconnect.ui.theme.Screens.ConnectionScreen.ConnectionStatus
 
@@ -20,12 +21,12 @@ import com.example.apogemixconnect.ui.theme.Screens.ConnectionScreen.ConnectionS
 import com.example.apogemixconnect.viewmodel.MainViewModel
 
 @Composable
-fun SendCommandScreen(viewModel: MainViewModel, onClick: (String) -> Unit) {
+fun SendCommandScreen(viewModel: MainViewModel, navController: NavController, onClick: (String) -> Unit) {
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        ConnectionStatus(viewModel)
+        ConnectionStatus(viewModel, navController )
         CommandsButtons(viewModel = viewModel)
         //DisplayFlightData(viewModel)
     }

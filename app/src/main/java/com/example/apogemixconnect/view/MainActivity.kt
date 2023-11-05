@@ -46,68 +46,26 @@ class MainActivity : ComponentActivity() {
             setContent {
                 val navController = rememberNavController()
                 NavHost(navController = navController, startDestination = "ConnectionScreen") {
+
                     composable("ConnectionScreen") {
-                        ConnectionScreen(viewModel, onClick = {
+                        ConnectionScreen(viewModel, navController, onClick = {
                             navController.navigate(it)
                         })
                     }
+
                     composable("ReciverDataScreen") {
-                        ReciverDataScreen(viewModel, onClick = {
+                        ReciverDataScreen(viewModel, navController, onClick = {
                             navController.navigate(it)
                         })
                     }
+
                     composable("SendCommandScreen") {
-                        SendCommandScreen(viewModel, onClick = {
+                        SendCommandScreen(viewModel,navController, onClick = {
                         navController.navigate(it)
                         })
                     }
+
                 }
             }
-        }
-
-
-        @OptIn(ExperimentalMaterial3Api::class)
-        @Composable
-        fun InputURL(url: MutableState<String>) {
-            TextField(
-                value = url.value,
-                onValueChange = { url.value = it },
-                label = { Text("Enter WebSocket URL") }
-            )
-        }
-
-
-        @OptIn(ExperimentalMaterial3Api::class)
-        @Composable
-        fun Input(): MutableState<String> {
-            val text = remember { mutableStateOf("") }
-
-            TextField(
-                value = text.value,
-                onValueChange = { text.value = it },
-                label = { Text("Send Command") }
-            )
-            return text
-        }
-
-
-        @Composable
-        fun SendCommand(inputText: MutableState<String>) {
-            Button(
-                shape = RoundedCornerShape(0),
-                onClick = {
-                    viewModel.sendCommand(inputText.value)
-                }
-            ) {
-                Text(text = "SendCommand")
-            }
-        }
-
-
-        private fun createRequest(adress: String): Request {
-            //val websocketURL = "ws://192.168.4.1/ws"
-            return Request.Builder()
-                .url(adress)
-                .build()
         }
     }

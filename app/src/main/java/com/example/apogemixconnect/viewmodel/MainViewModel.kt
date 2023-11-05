@@ -80,6 +80,32 @@ class MainViewModel : ViewModel() {
     }
 
 
+    fun changeFrequency(freqMHz: Int){
+        val client = OkHttpClient()
+
+        val url = "http://192.168.4.1/?freqmhz=$freqMHz"
+
+
+
+        val request = Request.Builder()
+            .url(url)
+            .build()
+
+        // Wykonanie żądania w osobnym wątku, ponieważ nie można wykonywać operacji sieciowych w wątku UI.
+        Thread {
+            client.newCall(request).execute().use { response ->
+                if (response.isSuccessful) {
+                    // Kod 200, wszystko poszło dobrze
+                    Log.d("GETyyy","Frequency changed successfully to $freqMHz MHz")
+                } else {
+                    // Błąd podczas zmiany częstotliwości
+                    Log.d("GETyyy","Failed to change frequency: ${response.message}")
+                }
+            }
+        }.start()
+    }
+
+
     fun clearMessage() = viewModelScope.launch(Dispatchers.Main) {
         _messages.value = Pair(false,"")
     }

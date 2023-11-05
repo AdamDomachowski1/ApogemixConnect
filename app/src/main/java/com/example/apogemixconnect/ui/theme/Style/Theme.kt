@@ -39,9 +39,8 @@ private val LightColorScheme = lightColorScheme(
 
 @Composable
 fun ApogemixConnectTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
+    darkTheme: Boolean = true, // Ustawienie domyślne na zawsze ciemne
+    dynamicColor: Boolean = false, // Wyłączenie dynamicznego kolorowania
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
