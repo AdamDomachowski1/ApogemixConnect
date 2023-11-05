@@ -29,6 +29,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.apogemixconnect.ui.theme.Screens.ReciverDataScreen.ReciverDataScreen
 import com.example.apogemixconnect.ui.theme.Screens.ConnectionScreen.ConnectionScreen
 import com.example.apogemixconnect.ui.theme.Screens.SendCommandScreen.SendCommandScreen
+import com.example.apogemixconnect.ui.theme.Screens.MainPage.MainPage
 import com.example.apogemixconnect.viewmodel.MainViewModel
 
 // Other imports
@@ -45,7 +46,13 @@ class MainActivity : ComponentActivity() {
 
             setContent {
                 val navController = rememberNavController()
-                NavHost(navController = navController, startDestination = "ConnectionScreen") {
+                NavHost(navController = navController, startDestination = "MainPage") {
+
+                    composable("MainPage") {
+                        MainPage(viewModel, navController, onClick = {
+                            navController.navigate(it)
+                        })
+                    }
 
                     composable("ConnectionScreen") {
                         ConnectionScreen(viewModel, navController, onClick = {

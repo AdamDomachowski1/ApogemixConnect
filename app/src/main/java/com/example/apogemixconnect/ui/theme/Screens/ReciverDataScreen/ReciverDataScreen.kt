@@ -60,15 +60,18 @@ fun DropdownNameSelector(
         OutlinedTextField(
             value = selectedName,
             onValueChange = { },
-            label = { Text("Select Name") },
+            label = { Text("Select Name", color = Color.White) },
             readOnly = true,
             trailingIcon = {
                 Icon(
                     imageVector = Icons.Filled.ArrowDropDown,
                     contentDescription = "Dropdown",
-                    Modifier.clickable { onSelectionChange(selectedName, !expanded) }
+                    Modifier.clickable { onSelectionChange(selectedName, !expanded) },
+                    tint = Color.White
                 )
             },
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                textColor = Color.White), // This will set the text color to white
             modifier = Modifier.fillMaxWidth()
         )
         DropdownMenu(
@@ -80,7 +83,7 @@ fun DropdownNameSelector(
         ) {
             namesList.forEach { name ->
                 DropdownMenuItem(
-                    text = { Text(name) },
+                    text = { Text(name, color = Color.White) },
                     onClick = { onSelectionChange(name, false) }
                 )
             }
@@ -118,7 +121,7 @@ fun FlightDataColumn(dataConvertedToArray: List<String>, name: String) {
 fun NoDataText(name: String) {
     Text(
         "No data available for the specified name: $name",
-        Modifier.padding(16.dp)
+        color = Color.White
     )
 }
 
@@ -131,8 +134,8 @@ fun FlightDataRow(label: String, value: String) {
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(text = label, modifier = Modifier.weight(1f))
-        Text(text = value, modifier = Modifier.weight(1f))
+        Text(text = label, modifier = Modifier.weight(1f), color = Color.White)
+        Text(text = value, modifier = Modifier.weight(1f), color = Color.White)
     }
 }
 
@@ -160,6 +163,7 @@ fun InputField(viewModel: MainViewModel) {
                     Text(
                         "Set Frequency",
                         textAlign = TextAlign.Center, // Aligns the label text when it is displayed above the TextField.
+                        color = Color.White,
                         modifier = Modifier.fillMaxWidth() // Ensures the label takes full width inside the TextField.
                     )
                 },
@@ -184,7 +188,7 @@ fun InputField(viewModel: MainViewModel) {
                     .height(48.dp), // You can set a fixed height for the button.
                 shape = RectangleShape // This makes the corners sharp, making it a rectangle.
             ) {
-                Text("Set")
+                Text("Set", color = Color.White)
             }
 
         }
