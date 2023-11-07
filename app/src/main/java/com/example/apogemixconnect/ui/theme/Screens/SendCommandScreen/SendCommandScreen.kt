@@ -10,9 +10,10 @@ import androidx.compose.material3.TextField
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.apogemixconnect.ui.theme.Screens.ConnectionScreen.ConnectionButtons
 import com.example.apogemixconnect.ui.theme.Screens.ConnectionScreen.ConnectionStatus
 
 // External libraries imports
@@ -27,7 +28,7 @@ fun SendCommandScreen(viewModel: MainViewModel, navController: NavController, on
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         ConnectionStatus(viewModel, navController )
-        CommandsButtons(viewModel = viewModel)
+        //CommandsButtons(viewModel = viewModel)
         //DisplayFlightData(viewModel)
     }
 }
@@ -84,3 +85,31 @@ fun CommandsButtons(viewModel: MainViewModel) {
         }
     }
 }
+//@OptIn(ExperimentalMaterial3Api::class)
+//@Composable
+//fun InputField(viewModel: MainViewModel) {
+//    var value by remember { mutableStateOf("443") }
+//
+//    Row(
+//        modifier = Modifier
+//            .padding(horizontal = 16.dp, vertical = 8.dp)
+//            .fillMaxWidth(),
+//        verticalAlignment = Alignment.CenterVertically
+//    ) {
+//        TextField(
+//            value = value,
+//            onValueChange = { newValue -> value = newValue.filter { it.isDigit() } },
+//            label = { Text("Set Frequency") },
+//            singleLine = true,
+//            textStyle = TextStyle(fontWeight = FontWeight.Bold),
+//            modifier = Modifier.weight(1f)
+//        )
+//
+//        Button(
+//            onClick = { viewModel.changeFrequency(value.toIntOrNull() ?: 443) },
+//            modifier = Modifier.height(48.dp)
+//        ) {
+//            Text("Set")
+//        }
+//    }
+//}

@@ -68,7 +68,7 @@ class MainActivity : ComponentActivity() {
 
                     composable("SendCommandScreen") {
                         SendCommandScreen(viewModel,navController, onClick = {
-                        navController.navigate(it)
+                            navController.navigate(it)
                         })
                     }
 
