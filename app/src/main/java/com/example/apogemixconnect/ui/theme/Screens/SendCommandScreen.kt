@@ -10,16 +10,12 @@ import androidx.compose.material3.TextField
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.apogemixconnect.ui.theme.Screens.ConnectionScreen.ConnectionStatus
-
-// External libraries imports
 
 // Project specific imports
 import com.example.apogemixconnect.viewmodel.MainViewModel
+import com.example.apogemixconnect.ui.theme.Screens.ConnectionScreen.ConnectionStatus
 
 @Composable
 fun SendCommandScreen(viewModel: MainViewModel, navController: NavController, onClick: (String) -> Unit) {

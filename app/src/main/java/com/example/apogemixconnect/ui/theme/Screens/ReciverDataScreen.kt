@@ -12,13 +12,10 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.apogemixconnect.ui.theme.Screens.ConnectionScreen.ConnectionStatus
 import com.example.apogemixconnect.viewmodel.MainViewModel
+import com.example.apogemixconnect.ui.theme.Screens.ConnectionScreen.ConnectionStatus
 
 // Constants for UI Design
 private val BoxHeight = 50.dp
@@ -30,6 +27,7 @@ private val ArrowIconSize = 40.dp
 private val SpacerWidth = 40.dp
 val ButtonColor = Color(0xFF6A205E)
 val BackgroundColor = Color(0xFF00072e)
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ReciverDataScreen(viewModel: MainViewModel, navController: NavController, onClick: (String) -> Unit) {
@@ -43,7 +41,8 @@ fun ReciverDataScreen(viewModel: MainViewModel, navController: NavController, on
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(BackgroundColor),
+            .background(BackgroundColor)
+            .padding(8.dp),
         contentAlignment = Alignment.Center // Center the content in the box
     ) {
         // Screen UI inside Box
@@ -73,9 +72,23 @@ fun DropdownNameSelector(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(start = 8.dp, end = 8.dp)
+
     ) {
-        Row {
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Button(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(8.dp)
+                    .height(TextFieldHeight),
+                shape = ButtonShape,
+                colors = ButtonDefaults.buttonColors(containerColor = Color.DarkGray),
+                onClick = {}
+            ) {
+                Text(text = "REC")
+            }
+
             OutlinedTextField(
                 value = selectedName,
                 onValueChange = { },
@@ -90,7 +103,8 @@ fun DropdownNameSelector(
                     )
                 },
                 modifier = Modifier
-                    .weight(2f),
+                    .weight(3f)
+                    .height(TextFieldHeight),
                 colors = TextFieldDefaults.outlinedTextFieldColors(
                     textColor = Color.White,
                     cursorColor = Color.White,
@@ -104,7 +118,7 @@ fun DropdownNameSelector(
             expanded = expanded,
             onDismissRequest = { onSelectionChange(selectedName, false) },
             modifier = Modifier
-                .fillMaxWidth(),
+                .fillMaxWidth()
         ) {
             namesList.forEach { name ->
                 DropdownMenuItem(
@@ -120,11 +134,18 @@ fun DropdownNameSelector(
 fun DisplayFlightData(viewModel: MainViewModel, name: String) {
     val dataMap by viewModel.dataMap.observeAsState(mapOf())
     val data = dataMap[name]?.split(";").orEmpty()
-
-    if (data.isNotEmpty()) {
-        FlightDataColumn(data, name)
-    } else {
-        NoDataText(name)
+    Box(
+        contentAlignment = Alignment.TopStart,
+        modifier = Modifier
+            .padding(16.dp)
+            .background(Color.DarkGray, RoundedCornerShape(8.dp))
+            .fillMaxWidth()
+    ) {
+        Column(modifier = Modifier.padding(8.dp)) {
+            data.forEachIndexed { index, value ->
+                FlightDataRow(label = "Data $index", value = value)
+            }
+        }
     }
 }
 
@@ -151,8 +172,15 @@ fun FlightDataRow(label: String, value: String) {
         modifier = Modifier.padding(vertical = 4.dp),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Text(text = label, modifier = Modifier.weight(1f))
-        Text(text = value, modifier = Modifier.weight(1f))
+        Text(text = label,
+            color = Color.White,
+            modifier = Modifier
+                .weight(1f))
+
+        Text(text = value,
+            color = Color.White,
+            modifier = Modifier
+                .weight(1f))
     }
 }
 

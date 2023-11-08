@@ -21,15 +21,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
-import org.w3c.dom.Text
 
 // Define constants for colors and dimensions
-val BackgroundColor = Color(0xFF00072e)
-val ButtonColor = Color(0xFF6A205E)
-val ButtonWidth = 280.dp
-val ButtonHeight = 50.dp
-val ButtonShape = RoundedCornerShape(20)
-val LogoSize = 500.dp
+private val  BackgroundColor = Color(0xFF00072e)
+private val  ButtonColor = Color(0xFF6A205E)
+private val  ButtonWidth = 280.dp
+private val  ButtonHeight = 50.dp
+private val  ButtonShape = RoundedCornerShape(20)
+private val LogoSize = 500.dp
 
 @Composable
 fun MainPage(

@@ -2,6 +2,8 @@ package com.example.apogemixconnect.model
 
 import android.util.Log
 import com.example.apogemixconnect.viewmodel.MainViewModel
+import okhttp3.OkHttpClient
+import okhttp3.Request
 import okhttp3.Response
 import okhttp3.WebSocket
 import okhttp3.WebSocketListener
@@ -40,5 +42,15 @@ class WebSocketListener(
     override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
         Log.d(TAG, "onFailure: ${t.message} $response")
         super.onFailure(webSocket, t, response)
+    }
+
+    suspend fun changeFrequency(freqMHz: Int): Boolean {
+        val client = OkHttpClient()
+        val url = "http://192.168.4.1/?freqmhz=$freqMHz"
+        val request = Request.Builder().url(url).build()
+
+        return client.newCall(request).execute().use { response ->
+            response.isSuccessful
+        }
     }
 }

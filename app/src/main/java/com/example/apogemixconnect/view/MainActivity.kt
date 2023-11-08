@@ -11,29 +11,22 @@ import androidx.lifecycle.ViewModelProvider
 // Compose UI imports
 
 // Compose Foundation imports
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 
 // Compose Material3 imports
-import androidx.compose.material3.*
 
 // Compose Runtime imports
-import androidx.compose.runtime.*
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-
-// Project-specific imports
 import com.example.apogemixconnect.ui.theme.Screens.ReciverDataScreen.ReciverDataScreen
 import com.example.apogemixconnect.ui.theme.Screens.ConnectionScreen.ConnectionScreen
-import com.example.apogemixconnect.ui.theme.Screens.SendCommandScreen.SendCommandScreen
 import com.example.apogemixconnect.ui.theme.Screens.MainPage.MainPage
+import com.example.apogemixconnect.ui.theme.Screens.SendCommandScreen.SendCommandScreen
+
+// Project-specific imports
 import com.example.apogemixconnect.viewmodel.MainViewModel
 
 // Other imports
-import okhttp3.Request
 
 
 class MainActivity : ComponentActivity() {

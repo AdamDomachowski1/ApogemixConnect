@@ -13,7 +13,6 @@ import okhttp3.WebSocket
 
 class MainViewModel : ViewModel() {
 
-
     private val _socketStatus = MutableLiveData(false)
     val socketStatus: LiveData<Boolean> = _socketStatus
 
@@ -80,27 +79,15 @@ class MainViewModel : ViewModel() {
     }
 
 
-    fun changeFrequency(freqMHz: Int){
-        val client = OkHttpClient()
-        val url = "http://192.168.4.1/?freqmhz=$freqMHz"
-        val request = Request.Builder()
-            .url(url)
-            .build()
-
-        if(_socketStatus.value == true){
-            Thread{
-                client.newCall(request).execute().use { response ->
-                    if (response.isSuccessful) {
-                        // Kod 200, wszystko poszło dobrze
-                        Log.d("GETyyy","Frequency changed successfully to $freqMHz MHz")
-                    } else {
-                        // Błąd podczas zmiany częstotliwości
-                        Log.d("GETyyy","Failed to change frequency: ${response.message}")
-                    }
-                }
-            }.start()
+    fun changeFrequency(freqMHz: Int) = viewModelScope.launch {
+        if (_socketStatus.value == true) {
+            val success = webSocketListener.changeFrequency(freqMHz)
+            if (success) {
+                Log.d("GETyyy","Frequency changed successfully to $freqMHz MHz")
+            } else {
+                Log.d("GETyyy","Failed to change frequency")
+            }
         }
-
     }
 
 
