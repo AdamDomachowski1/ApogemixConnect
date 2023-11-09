@@ -22,6 +22,7 @@ import com.example.apogemixconnect.ui.theme.Screens.ReciverDataScreen.ReciverDat
 import com.example.apogemixconnect.ui.theme.Screens.ConnectionScreen.ConnectionScreen
 import com.example.apogemixconnect.ui.theme.Screens.MainPage.MainPage
 import com.example.apogemixconnect.ui.theme.Screens.SendCommandScreen.SendCommandScreen
+import com.example.apogemixconnect.viewmodel.DatabaseViewModel
 
 // Project-specific imports
 import com.example.apogemixconnect.viewmodel.MainViewModel
@@ -32,10 +33,13 @@ import com.example.apogemixconnect.viewmodel.MainViewModel
 class MainActivity : ComponentActivity() {
 
     private lateinit var viewModel: MainViewModel
+    private lateinit var DBviewModel: DatabaseViewModel
 
-        override fun onCreate(savedInstanceState: Bundle?) {
+
+    override fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)
             viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
+            DBviewModel = ViewModelProvider(this).get(DatabaseViewModel::class.java)
 
             setContent {
                 val navController = rememberNavController()
@@ -48,7 +52,7 @@ class MainActivity : ComponentActivity() {
                     }
 
                     composable("ConnectionScreen") {
-                        ConnectionScreen(viewModel, navController, onClick = {
+                        ConnectionScreen(viewModel, DBviewModel, navController, onClick = {
                             navController.navigate(it)
                         })
                     }

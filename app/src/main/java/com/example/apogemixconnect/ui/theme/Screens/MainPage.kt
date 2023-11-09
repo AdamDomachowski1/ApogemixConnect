@@ -21,6 +21,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
+import com.example.apogemixconnect.viewmodel.DatabaseViewModel
+
 
 // Define constants for colors and dimensions
 private val  BackgroundColor = Color(0xFF00072e)
@@ -79,6 +81,7 @@ fun InfoTextField() {
     )
 }
 
+
 @Composable
 fun LaunchButton(onClick: () -> Unit) {
     Button(
@@ -94,8 +97,8 @@ fun LaunchButton(onClick: () -> Unit) {
     }
 }
 
-@Preview(showBackground = true, device = Devices.PIXEL_4)
-@Composable
-fun MainPagePreview() {
-    MainPage(viewModel = viewModel(), navController = rememberNavController())
-}
+//@Preview(showBackground = true, device = Devices.PIXEL_4)
+//@Composable
+//fun MainPagePreview() {
+//    MainPage(viewModel = viewModel(), navController = rememberNavController())
+//}

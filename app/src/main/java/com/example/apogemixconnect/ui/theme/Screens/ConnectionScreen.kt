@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.apogemixconnect.viewmodel.DatabaseViewModel
 import com.example.apogemixconnect.viewmodel.MainViewModel
 
 // Constants for UI Design
@@ -30,7 +31,7 @@ val BackgroundColor = Color(0xFF00072e)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ConnectionScreen(viewModel: MainViewModel, navController: NavController, onClick: (String) -> Unit) {
+fun ConnectionScreen(viewModel: MainViewModel, DBviewModel: DatabaseViewModel, navController: NavController, onClick: (String) -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -43,6 +44,7 @@ fun ConnectionScreen(viewModel: MainViewModel, navController: NavController, onC
             ConnectionStatus(viewModel, navController)
             ConnectionInputs(viewModel)
             NavigateButtons(onClick)
+            DBTextField(DBviewModel)
         }
     }
 }
@@ -154,4 +156,15 @@ fun NavigateButtons(onClick: (String) -> Unit) {
             Text(text = "Flight Controller")
         }
     }
+}
+
+@Composable
+fun DBTextField(DBviewModel: DatabaseViewModel) {
+    Text(
+        text = DBviewModel.napiszxd(),
+        color = Color.White,
+        modifier = Modifier
+            .padding(16.dp)
+            .fillMaxWidth()
+    )
 }
