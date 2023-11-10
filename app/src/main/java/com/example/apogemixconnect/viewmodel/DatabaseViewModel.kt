@@ -12,35 +12,48 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import kotlin.concurrent.fixedRateTimer
 
 class DatabaseViewModel(app: Application) : AndroidViewModel(app) {
     private val repo = DatabaseRepository(app.applicationContext)
 
-    fun getContacts() : Flow<List<Flight>> {
-        println("fupaaaa")
-        return repo.getAll()
-    }
-
-    fun napiszxd(): String {
-        return("XD")
-    }
+    private val _nowRecording = mutableListOf<String>()
+    // Public read-only view of nowRecording
+    val nowRecording: List<String> = _nowRecording
 
     init{
         CoroutineScope(Dispatchers.IO).launch {
             repo.dropDatabase()
-            populateDatabse()
         }
-        populateDatabse()
     }
 
-    private fun populateDatabse(){
-        repeat(5){
-            val time = System.currentTimeMillis()
-            val flight = Flight(name = "$time", date = time.toLong(), dataId = time.toInt())
-            CoroutineScope(viewModelScope.coroutineContext).launch {
-                repo.insertAll(listOf(flight))
-            }
+    fun addToNowRecording(string: String){
+        _nowRecording.add(string)
+    }
+
+    fun removeFromNowRecording(string: String) {
+        _nowRecording.remove(string)
+    }
+
+    fun isStringInList(stringToCheck: String): Boolean {
+        // No need to switch to the main thread as we are only reading the list
+        return _nowRecording.contains(stringToCheck)
+    }
+
+    fun getFlights() : Flow<List<Flight>> {
+        return repo.getAll()
+    }
+
+    fun addToDatabase(name: String){
+        val currentDateTime = LocalDateTime.now()
+        val formatter = DateTimeFormatter.ofPattern("dd.MMM.yyyy HH:mm")
+        val formattedDate = currentDateTime.format(formatter)
+        val flight = Flight(name = name, date = formattedDate, dataId = 1)
+        CoroutineScope(viewModelScope.coroutineContext).launch {
+            repo.insertAll(listOf(flight))
         }
     }
 }

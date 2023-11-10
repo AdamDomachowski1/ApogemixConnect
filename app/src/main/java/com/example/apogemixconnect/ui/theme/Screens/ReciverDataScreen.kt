@@ -14,8 +14,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.apogemixconnect.viewmodel.MainViewModel
+import com.example.apogemixconnect.viewmodel.WebSocketViewModel
 import com.example.apogemixconnect.ui.theme.Screens.ConnectionScreen.ConnectionStatus
+import com.example.apogemixconnect.viewmodel.DatabaseViewModel
 
 // Constants for UI Design
 private val BoxHeight = 50.dp
@@ -30,7 +31,7 @@ val BackgroundColor = Color(0xFF00072e)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ReciverDataScreen(viewModel: MainViewModel, navController: NavController, onClick: (String) -> Unit) {
+fun ReciverDataScreen(viewModel: WebSocketViewModel, DBviewModel: DatabaseViewModel, navController: NavController, onClick: (String) -> Unit) {
     // States
     val dataMap by viewModel.dataMap.observeAsState(mapOf())
     val namesList = dataMap.keys.toList()
@@ -41,8 +42,7 @@ fun ReciverDataScreen(viewModel: MainViewModel, navController: NavController, on
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(BackgroundColor)
-            .padding(8.dp),
+            .background(BackgroundColor),
         contentAlignment = Alignment.Center // Center the content in the box
     ) {
         // Screen UI inside Box
@@ -51,7 +51,7 @@ fun ReciverDataScreen(viewModel: MainViewModel, navController: NavController, on
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             ConnectionStatus(viewModel, navController)
-            DropdownNameSelector(namesList, expanded, selectedName) { name, isExpanded ->
+            DropdownNameSelector(DBviewModel, namesList, expanded, selectedName) { name, isExpanded ->
                 selectedName = name
                 expanded = isExpanded
             }
@@ -64,10 +64,11 @@ fun ReciverDataScreen(viewModel: MainViewModel, navController: NavController, on
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DropdownNameSelector(
+    DBviewModel: DatabaseViewModel,
     namesList: List<String>,
     expanded: Boolean,
     selectedName: String,
-    onSelectionChange: (String, Boolean) -> Unit
+    onSelectionChange: (String, Boolean) -> Unit,
 ) {
     Box(
         modifier = Modifier
@@ -82,11 +83,20 @@ fun DropdownNameSelector(
                     .weight(1f)
                     .padding(8.dp)
                     .height(TextFieldHeight),
-                shape = ButtonShape,
-                colors = ButtonDefaults.buttonColors(containerColor = Color.DarkGray),
-                onClick = {}
+                shape = RoundedCornerShape(4.dp), // Adjust the shape as needed for your ButtonShape
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = if (DBviewModel.isStringInList(selectedName)) Color.Red else Color.DarkGray
+                ),
+                onClick = {
+                    if (DBviewModel.isStringInList(selectedName)) {
+                        DBviewModel.removeFromNowRecording(selectedName)
+                    } else {
+                        DBviewModel.addToDatabase(selectedName)
+                        DBviewModel.addToNowRecording(selectedName)
+                    }
+                }
             ) {
-                Text(text = "REC")
+                Text(text = if (DBviewModel.isStringInList(selectedName)) "END" else "REC")
             }
 
             OutlinedTextField(
@@ -131,7 +141,7 @@ fun DropdownNameSelector(
 }
 
 @Composable
-fun DisplayFlightData(viewModel: MainViewModel, name: String) {
+fun DisplayFlightData(viewModel: WebSocketViewModel, name: String) {
     val dataMap by viewModel.dataMap.observeAsState(mapOf())
     val data = dataMap[name]?.split(";").orEmpty()
     Box(

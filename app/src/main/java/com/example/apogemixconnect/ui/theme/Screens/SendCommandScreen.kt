@@ -14,11 +14,11 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 
 // Project specific imports
-import com.example.apogemixconnect.viewmodel.MainViewModel
+import com.example.apogemixconnect.viewmodel.WebSocketViewModel
 import com.example.apogemixconnect.ui.theme.Screens.ConnectionScreen.ConnectionStatus
 
 @Composable
-fun SendCommandScreen(viewModel: MainViewModel, navController: NavController, onClick: (String) -> Unit) {
+fun SendCommandScreen(viewModel: WebSocketViewModel, navController: NavController, onClick: (String) -> Unit) {
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -47,7 +47,7 @@ fun InputField(defaultValue: String = "Test Message CODE 000XF"): MutableState<S
 }
 
 @Composable
-fun CommandsButtons(viewModel: MainViewModel) {
+fun CommandsButtons(viewModel: WebSocketViewModel) {
     val inputText = InputField()
     Row(
         modifier = Modifier

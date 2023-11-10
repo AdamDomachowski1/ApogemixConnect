@@ -11,7 +11,7 @@ import okhttp3.Request
 import okhttp3.WebSocket
 
 
-class MainViewModel : ViewModel() {
+class WebSocketViewModel : ViewModel() {
 
     private val _socketStatus = MutableLiveData(false)
     val socketStatus: LiveData<Boolean> = _socketStatus
@@ -23,7 +23,9 @@ class MainViewModel : ViewModel() {
     val dataMap: LiveData<Map<String, String>> = _dataMap
 
     private val okHttpClient = OkHttpClient()
+
     private var webSocket: WebSocket? = null
+
     private val webSocketListener = WebSocketListener(this)
 
 

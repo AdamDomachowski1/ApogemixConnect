@@ -3,6 +3,7 @@ package com.example.apogemixconnect.ui.theme.Screens.ConnectionScreen
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
@@ -14,8 +15,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.apogemixconnect.Data.FlightDB.Flight
 import com.example.apogemixconnect.viewmodel.DatabaseViewModel
-import com.example.apogemixconnect.viewmodel.MainViewModel
+import com.example.apogemixconnect.viewmodel.WebSocketViewModel
+import androidx.compose.foundation.lazy.items
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 // Constants for UI Design
 private val BoxHeight = 50.dp
@@ -31,7 +36,7 @@ val BackgroundColor = Color(0xFF00072e)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ConnectionScreen(viewModel: MainViewModel, DBviewModel: DatabaseViewModel, navController: NavController, onClick: (String) -> Unit) {
+fun ConnectionScreen(viewModel: WebSocketViewModel, DBviewModel: DatabaseViewModel, navController: NavController, onClick: (String) -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -44,14 +49,15 @@ fun ConnectionScreen(viewModel: MainViewModel, DBviewModel: DatabaseViewModel, n
             ConnectionStatus(viewModel, navController)
             ConnectionInputs(viewModel)
             NavigateButtons(onClick)
-            DBTextField(DBviewModel)
+            val flights = DBviewModel.getFlights().collectAsState(initial = emptyList())
+            FlightLazyColumn(onClick, flights.value)
         }
     }
 }
 
 
 @Composable
-fun ConnectionStatus(viewModel: MainViewModel, navController: NavController) {
+fun ConnectionStatus(viewModel: WebSocketViewModel, navController: NavController) {
     val isConnected by viewModel.socketStatus.observeAsState(initial = false)
     val statusText = if (isConnected) "Connected" else "No connection"
     Box(
@@ -87,7 +93,7 @@ fun ConnectionStatus(viewModel: MainViewModel, navController: NavController) {
 
 @ExperimentalMaterial3Api
 @Composable
-fun ConnectionInputs(viewModel: MainViewModel) {
+fun ConnectionInputs(viewModel: WebSocketViewModel) {
     val inputText = remember { mutableStateOf("ws://192.168.4.1/ws") }
 
     Row(
@@ -109,7 +115,7 @@ fun ConnectionInputs(viewModel: MainViewModel) {
             colors = TextFieldDefaults.textFieldColors(
                     unfocusedIndicatorColor = Color.Transparent, // Hide underline when not focused
             focusedIndicatorColor = Color.Transparent // Hide underline when focused
-        )
+            )
         )
 
         Button(
@@ -158,13 +164,37 @@ fun NavigateButtons(onClick: (String) -> Unit) {
     }
 }
 
+
 @Composable
-fun DBTextField(DBviewModel: DatabaseViewModel) {
-    Text(
-        text = DBviewModel.napiszxd(),
-        color = Color.White,
+fun FlightLazyColumn(onClick: (String) -> Unit, flights: List<Flight>) {
+    LazyColumn(
         modifier = Modifier
-            .padding(16.dp)
+            .padding(8.dp)
+    ){
+        items(items = flights, key = {it.uid}){flight ->
+            FlightRow(onClick, flight)
+        }
+
+    }
+}
+
+@Composable
+fun FlightRow(onClick: (String) -> Unit, flight : Flight) {
+    Surface (
+        modifier = Modifier
             .fillMaxWidth()
-    )
+            .height(40.dp)
+            .padding(1.dp)
+            .clickable{ onClick("DataAnalysis/${flight.dataId}") },
+        shape = RoundedCornerShape(10.dp),
+
+        ){
+        Row(modifier = Modifier.padding(horizontal = 16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(text = "${flight.uid} ${flight.name}")
+            Text(text = "${flight.date}")
+        }
+    }
 }

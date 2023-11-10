@@ -15,17 +15,12 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.apogemixconnect.viewmodel.MainViewModel
+import com.example.apogemixconnect.viewmodel.WebSocketViewModel
 import com.example.apogemixconnect.R
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.Devices
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.compose.rememberNavController
-import com.example.apogemixconnect.viewmodel.DatabaseViewModel
 
 
 // Define constants for colors and dimensions
-private val  BackgroundColor = Color(0xFF00072e)
+val  BackgroundColor = Color(0xFF00072e)
 private val  ButtonColor = Color(0xFF6A205E)
 private val  ButtonWidth = 280.dp
 private val  ButtonHeight = 50.dp
@@ -34,7 +29,7 @@ private val LogoSize = 500.dp
 
 @Composable
 fun MainPage(
-    viewModel: MainViewModel,
+    viewModel: WebSocketViewModel,
     navController: NavController,
     onClick: (String) -> Unit = {}
 ) {

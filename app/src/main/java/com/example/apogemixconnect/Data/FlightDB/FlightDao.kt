@@ -11,13 +11,13 @@ import kotlinx.coroutines.flow.Flow
 interface FlightDao {
 
     @Insert
-    suspend fun insertAll(contacts: List<Flight>)
+    suspend fun insertAll(flights: List<Flight>)
 
     @Delete
-    suspend fun delete(contacts: List<Flight>)
+    suspend fun delete(flights: List<Flight>)
 
     @Update
-    suspend fun update(contacts: Flight)
+    suspend fun update(flights: Flight)
 
     @Query("SELECT * FROM flights_table")
     fun getAll(): Flow<List<Flight>>

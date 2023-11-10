@@ -1,7 +1,7 @@
 package com.example.apogemixconnect.model
 
 import android.util.Log
-import com.example.apogemixconnect.viewmodel.MainViewModel
+import com.example.apogemixconnect.viewmodel.WebSocketViewModel
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
@@ -9,7 +9,7 @@ import okhttp3.WebSocket
 import okhttp3.WebSocketListener
 
 class WebSocketListener(
-    private val viewModel: MainViewModel
+    private val viewModel: WebSocketViewModel
 ): WebSocketListener() {
 
     private val TAG = "SOCKET"
