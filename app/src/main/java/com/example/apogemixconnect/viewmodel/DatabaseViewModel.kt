@@ -1,10 +1,13 @@
 package com.example.apogemixconnect.viewmodel
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.apogemixconnect.Data.FlightDB.Flight
+import com.example.apogemixconnect.model.DataMapRepository
 import com.example.apogemixconnect.model.DatabaseRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -15,6 +18,8 @@ import java.time.format.DateTimeFormatter
 
 class DatabaseViewModel(app: Application) : AndroidViewModel(app) {
     private val repo = DatabaseRepository(app.applicationContext)
+
+    val dataMap: LiveData<Map<String, String>> = DataMapRepository.dataMap
 
     private val _nowRecording = mutableListOf<String>()
     // Public read-only view of nowRecording
@@ -49,7 +54,10 @@ class DatabaseViewModel(app: Application) : AndroidViewModel(app) {
         val formattedDate = currentDateTime.format(formatter)
         val flight = Flight(name = name, date = formattedDate, dataId = 1)
         CoroutineScope(viewModelScope.coroutineContext).launch {
-            repo.insertAll(listOf(flight))
+            val id = repo.insert(flight)
+            Log.d("XD", "$id")
         }
     }
+
+
 }

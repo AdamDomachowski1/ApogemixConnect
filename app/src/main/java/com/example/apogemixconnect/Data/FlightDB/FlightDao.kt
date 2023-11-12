@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.Flow
 interface FlightDao {
 
     @Insert
-    suspend fun insertAll(flights: List<Flight>)
+    suspend fun insert(flight: Flight): Long
 
     @Delete
     suspend fun delete(flights: List<Flight>)
