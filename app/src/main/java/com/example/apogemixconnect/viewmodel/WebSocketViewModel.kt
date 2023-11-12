@@ -3,6 +3,7 @@ package com.example.apogemixconnect.viewmodel
 
 import android.util.Log
 import androidx.lifecycle.*
+import com.example.apogemixconnect.model.DataMapRepository
 import com.example.apogemixconnect.model.WebSocketListener
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -19,15 +20,13 @@ class WebSocketViewModel : ViewModel() {
     private val _messages = MutableLiveData<Pair<Boolean, String>>()
     val messages: LiveData<Pair<Boolean, String>> = _messages
 
-    private val _dataMap = MutableLiveData<Map<String, String>>()
-    val dataMap: LiveData<Map<String, String>> = _dataMap
-
     private val okHttpClient = OkHttpClient()
 
     private var webSocket: WebSocket? = null
 
     private val webSocketListener = WebSocketListener(this)
 
+    val dataMap: LiveData<Map<String, String>> = DataMapRepository.dataMap
 
     // Connect Function
     fun connect(url: String) {
@@ -41,7 +40,7 @@ class WebSocketViewModel : ViewModel() {
     fun disconnect() {
         webSocket?.close(1000, "Canceled manually.")
         clearMessage()
-        resetData()
+        resetDataInDataMap()
     }
 
     // Send Command Function
@@ -61,25 +60,14 @@ class WebSocketViewModel : ViewModel() {
         }
     }
 
-    fun updateData(dataString: String) {
-        Log.d("WebSocket", "Received data: $dataString")
+    fun updateDataInDataMap(dataString: String) {
         val parts = dataString.split(";", limit = 2)
         if (parts.size == 2) {
-            val transmitterName = parts[0]
-            val restOfData = parts[1]
-
-            // Get a copy of the current map or create a new one if null
-            val updatedMap = _dataMap.value?.toMutableMap() ?: mutableMapOf()
-
-            // Update the map with the new data
-            updatedMap[transmitterName] = restOfData
-
-            // Post the updated map back to MutableLiveData
-            _dataMap.postValue(updatedMap)
-            Log.d("WebSocket", "restOfData: $restOfData")
+            val key = parts[0]
+            val value = parts[1]
+            DataMapRepository.updateDataMap(key, value)
         }
     }
-
 
     fun changeFrequency(freqMHz: Int) = viewModelScope.launch {
         if (_socketStatus.value == true) {
@@ -101,8 +89,7 @@ class WebSocketViewModel : ViewModel() {
         _socketStatus.value = status
     }
 
-    fun resetData() {
-        _dataMap.postValue(emptyMap())
+    fun resetDataInDataMap() {
+        DataMapRepository.resetDataMap()
     }
-
 }

@@ -9,13 +9,9 @@ import com.example.apogemixconnect.model.DatabaseRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import kotlin.concurrent.fixedRateTimer
 
 class DatabaseViewModel(app: Application) : AndroidViewModel(app) {
     private val repo = DatabaseRepository(app.applicationContext)
