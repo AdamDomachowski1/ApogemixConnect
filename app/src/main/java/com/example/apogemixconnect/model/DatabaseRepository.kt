@@ -1,36 +1,23 @@
 package com.example.apogemixconnect.model
 
-
-import android.content.Context;
-import com.example.apogemixconnect.Data.FlightDB.Flight
-import com.example.apogemixconnect.Data.FlightDB.FlightDao
-import com.example.apogemixconnect.Data.FlightDB.FlightDb
-import com.example.apogemixconnect.Data.FlightDataDB.FlightDatas
-import com.example.apogemixconnect.Data.FlightDataDB.FlightDatasDao
+import android.content.Context
+import com.example.apogemixconnect.model.Data.FlightDB.Flight
+import com.example.apogemixconnect.model.Data.FlightDB.FlightDao
+import com.example.apogemixconnect.model.Data.FlightDb
+import com.example.apogemixconnect.model.Data.FlightDataDB.FlightDatas
+import com.example.apogemixconnect.model.Data.FlightDataDB.FlightDatasDao
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 
 class DatabaseRepository(context: Context) : FlightDao, FlightDatasDao {
+
+    //tworzenie zmiennych przypisanych do typów danych w Baziedanych
     private val daoFlight = FlightDb.getInstance(context).flightDao()
+
     private val daoDatasFlight = FlightDb.getInstance(context).flightDatasDao()
 
-    override suspend fun updateFlightData(flightData: FlightDatas) = withContext(Dispatchers.IO) {
-        daoDatasFlight.updateFlightData(flightData)
-    }
-
-    override suspend fun deleteFlightData(flightData: FlightDatas) = withContext(Dispatchers.IO) {
-        daoDatasFlight.deleteFlightData(flightData)
-    }
-
-    override suspend fun insertAllFlightData(flightDataList: List<FlightDatas>) = withContext(Dispatchers.IO) {
-        daoDatasFlight.insertAllFlightData(flightDataList)
-    }
-
-    override suspend fun insertFlightData(flightData: FlightDatas) = withContext(Dispatchers.IO) {
-        daoDatasFlight.insertFlightData(flightData)
-    }
-
+    // Metody dla FlightDao
     override suspend fun insert(flight: Flight): Long = withContext(Dispatchers.IO) {
         daoFlight.insert(flight)
     }
@@ -49,4 +36,22 @@ class DatabaseRepository(context: Context) : FlightDao, FlightDatasDao {
         daoFlight.dropDatabase()
     }
 
+    // Metody dla FlightDatasDao
+    override suspend fun insertFlightData(flightData: FlightDatas) = withContext(Dispatchers.IO) {
+        daoDatasFlight.insertFlightData(flightData)
+    }
+
+    override suspend fun insertAllFlightData(flightDataList: List<FlightDatas>) = withContext(Dispatchers.IO) {
+        daoDatasFlight.insertAllFlightData(flightDataList)
+    }
+
+    override suspend fun deleteFlightData(flightData: FlightDatas) = withContext(Dispatchers.IO) {
+        daoDatasFlight.deleteFlightData(flightData)
+    }
+
+    override suspend fun updateFlightData(flightData: FlightDatas) = withContext(Dispatchers.IO) {
+        daoDatasFlight.updateFlightData(flightData)
+    }
+
+    override fun getFlightDatasByUid(flightId: Int): Flow<List<FlightDatas>> = daoDatasFlight.getFlightDatasByUid(flightId)
 }

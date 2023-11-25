@@ -81,31 +81,3 @@ fun CommandsButtons(viewModel: WebSocketViewModel) {
         }
     }
 }
-//@OptIn(ExperimentalMaterial3Api::class)
-//@Composable
-//fun InputField(viewModel: MainViewModel) {
-//    var value by remember { mutableStateOf("443") }
-//
-//    Row(
-//        modifier = Modifier
-//            .padding(horizontal = 16.dp, vertical = 8.dp)
-//            .fillMaxWidth(),
-//        verticalAlignment = Alignment.CenterVertically
-//    ) {
-//        TextField(
-//            value = value,
-//            onValueChange = { newValue -> value = newValue.filter { it.isDigit() } },
-//            label = { Text("Set Frequency") },
-//            singleLine = true,
-//            textStyle = TextStyle(fontWeight = FontWeight.Bold),
-//            modifier = Modifier.weight(1f)
-//        )
-//
-//        Button(
-//            onClick = { viewModel.changeFrequency(value.toIntOrNull() ?: 443) },
-//            modifier = Modifier.height(48.dp)
-//        ) {
-//            Text("Set")
-//        }
-//    }
-//}

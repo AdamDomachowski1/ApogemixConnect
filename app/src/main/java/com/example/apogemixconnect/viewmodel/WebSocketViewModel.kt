@@ -17,9 +17,6 @@ class WebSocketViewModel : ViewModel() {
     private val _socketStatus = MutableLiveData(false)
     val socketStatus: LiveData<Boolean> = _socketStatus
 
-    private val _messages = MutableLiveData<Pair<Boolean, String>>()
-    val messages: LiveData<Pair<Boolean, String>> = _messages
-
     private val okHttpClient = OkHttpClient()
 
     private var webSocket: WebSocket? = null
@@ -39,7 +36,6 @@ class WebSocketViewModel : ViewModel() {
     // Disconnect Function
     fun disconnect() {
         webSocket?.close(1000, "Canceled manually.")
-        clearMessage()
         resetDataInDataMap()
     }
 
@@ -52,12 +48,6 @@ class WebSocketViewModel : ViewModel() {
         return Request.Builder()
             .url(adress)
             .build()
-    }
-
-    fun handleIncomingMessage(message: Pair<Boolean, String>) = viewModelScope.launch(Dispatchers.Main) {
-        if (_socketStatus.value == true) {
-            _messages.value = message
-        }
     }
 
     fun updateDataInDataMap(dataString: String) {
@@ -78,11 +68,6 @@ class WebSocketViewModel : ViewModel() {
                 Log.d("GETyyy","Failed to change frequency")
             }
         }
-    }
-
-
-    fun clearMessage() = viewModelScope.launch(Dispatchers.Main) {
-        _messages.value = Pair(false,"")
     }
 
     fun setStatus(status: Boolean) = viewModelScope.launch(Dispatchers.Main) {

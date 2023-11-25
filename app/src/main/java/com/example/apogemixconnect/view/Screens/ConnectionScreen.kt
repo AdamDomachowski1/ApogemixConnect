@@ -15,7 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.apogemixconnect.Data.FlightDB.Flight
+import com.example.apogemixconnect.model.Data.FlightDB.Flight
 import com.example.apogemixconnect.viewmodel.DatabaseViewModel
 import com.example.apogemixconnect.viewmodel.WebSocketViewModel
 import androidx.compose.foundation.lazy.items
@@ -185,7 +185,7 @@ fun FlightRow(onClick: (String) -> Unit, flight : Flight) {
             .fillMaxWidth()
             .height(40.dp)
             .padding(1.dp)
-            .clickable{ onClick("DataAnalysis/${flight.dataId}") },
+            .clickable{ onClick("DataAnalysis/${flight.uid}") },
         shape = RoundedCornerShape(10.dp),
 
         ){

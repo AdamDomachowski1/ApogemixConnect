@@ -1,6 +1,7 @@
 package com.example.apogemixconnect.view
 
 // Android imports
+import DataAnalysis
 import android.os.Bundle
 
 // Jetpack imports
@@ -22,7 +23,6 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.apogemixconnect.ui.theme.Screens.ReciverDataScreen.ReciverDataScreen
 import com.example.apogemixconnect.ui.theme.Screens.ConnectionScreen.ConnectionScreen
-import com.example.apogemixconnect.ui.theme.Screens.DataAnalysis.DataAnalysis
 import com.example.apogemixconnect.ui.theme.Screens.MainPage.MainPage
 import com.example.apogemixconnect.ui.theme.Screens.SendCommandScreen.SendCommandScreen
 import com.example.apogemixconnect.viewmodel.DatabaseViewModel

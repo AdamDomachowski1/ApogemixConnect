@@ -3,6 +3,8 @@ package com.example.apogemixconnect.ui.theme.Screens.ReciverDataScreen
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
@@ -12,8 +14,11 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.apogemixconnect.model.Data.FlightDB.Flight
 import com.example.apogemixconnect.viewmodel.WebSocketViewModel
 import com.example.apogemixconnect.ui.theme.Screens.ConnectionScreen.ConnectionStatus
 import com.example.apogemixconnect.viewmodel.DatabaseViewModel
@@ -72,16 +77,18 @@ fun DropdownNameSelector(
 ) {
     Box(
         modifier = Modifier
-            .fillMaxWidth()
+            .padding(4.dp)
 
     ) {
         Row(
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .padding(8.dp)
+                .height(TextFieldHeight),
         ) {
             Button(
                 modifier = Modifier
                     .weight(1f)
-                    .padding(8.dp)
                     .height(TextFieldHeight),
                 shape = RoundedCornerShape(4.dp), // Adjust the shape as needed for your ButtonShape
                 colors = ButtonDefaults.buttonColors(
@@ -98,6 +105,8 @@ fun DropdownNameSelector(
             ) {
                 Text(text = if (DBviewModel.isStringInList(selectedName)) "END" else "REC")
             }
+            
+            Spacer(modifier = Modifier.width(10.dp) )
 
             OutlinedTextField(
                 value = selectedName,
@@ -140,58 +149,55 @@ fun DropdownNameSelector(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DisplayFlightData(viewModel: WebSocketViewModel, name: String) {
     val dataMap by viewModel.dataMap.observeAsState(mapOf())
     val data = dataMap[name]?.split(";").orEmpty()
+   Column(modifier = Modifier.padding(8.dp)) {
+       FlightRow("GPS Coordinates", value = if (data.isNotEmpty()) "${data[0]} ; ${data[1]}" else "N/A")
+       FlightRow("GPS Altitude", value = if (data.isNotEmpty()) "${data[2]} m" else "N/A")
+       FlightRow("Calibrated Altitude", value = if (data.isNotEmpty()) "${data[6]} m" else "N/A")
+       FlightRow("Time", value = if (data.isNotEmpty()) "${data[3]} ms" else "N/A")
+       FlightRow("Temperature", value = if (data.isNotEmpty()) "${data[4]} \u00B0C" else "N/A")
+       FlightRow("Pressure", value = if (data.isNotEmpty()) "${data[5]} Pa" else "N/A")
+       FlightRow("Vertical Velocity", value = if (data.isNotEmpty()) "${data[7]} m/s" else "N/A")
+       FlightRow("Continuity", value = if (data.isNotEmpty()) "${data[8]}"  else "N/A")
+       FlightRow("Status", value = if (data.isNotEmpty()) "${data[9]}"  else "N/A")
+    }
+}
+
+
+@Composable
+fun FlightRow(label: String, value: String){
     Box(
         contentAlignment = Alignment.TopStart,
         modifier = Modifier
-            .padding(16.dp)
+            .padding(4.dp)
             .background(Color.DarkGray, RoundedCornerShape(8.dp))
             .fillMaxWidth()
-    ) {
-        Column(modifier = Modifier.padding(8.dp)) {
-            data.forEachIndexed { index, value ->
-                FlightDataRow(label = "Data $index", value = value)
-            }
+    ){
+        Row(
+            modifier = Modifier
+                .padding(vertical = 4.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+        ) {
+            Text(text = label,
+                fontSize = 16.sp,
+                color = Color.White,
+                modifier = Modifier
+                    .align(Alignment.CenterVertically)
+                    .padding(8.dp)
+                    .weight(1f))
+
+            Text(text = value,
+                fontSize = 18.sp,
+                color = Color.White,
+                modifier = Modifier
+                    .align(Alignment.CenterVertically)
+                    .wrapContentWidth(Alignment.CenterHorizontally) // Wyśrodkowanie poziome
+                    .padding(8.dp)
+                    .weight(1f))
         }
     }
 }
-
-@Composable
-fun FlightDataColumn(data: List<String>, name: String) {
-    Column(modifier = Modifier.padding(16.dp)) {
-        data.forEachIndexed { index, value ->
-            FlightDataRow(label = "Data $index", value = value)
-        }
-    }
-}
-
-@Composable
-fun NoDataText(name: String) {
-    Text(
-        "No data available for $name",
-        style = MaterialTheme.typography.bodyMedium
-    )
-}
-
-@Composable
-fun FlightDataRow(label: String, value: String) {
-    Row(
-        modifier = Modifier.padding(vertical = 4.dp),
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        Text(text = label,
-            color = Color.White,
-            modifier = Modifier
-                .weight(1f))
-
-        Text(text = value,
-            color = Color.White,
-            modifier = Modifier
-                .weight(1f))
-    }
-}
-
-

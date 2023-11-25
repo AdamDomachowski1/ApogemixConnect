@@ -1,13 +1,13 @@
-package com.example.apogemixconnect.Data.FlightDB
+package com.example.apogemixconnect.model.Data
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.example.apogemixconnect.Data.FlightDB.Flight
-import com.example.apogemixconnect.Data.FlightDB.FlightDao
-import com.example.apogemixconnect.Data.FlightDataDB.FlightDatas
-import com.example.apogemixconnect.Data.FlightDataDB.FlightDatasDao
+import com.example.apogemixconnect.model.Data.FlightDB.Flight
+import com.example.apogemixconnect.model.Data.FlightDB.FlightDao
+import com.example.apogemixconnect.model.Data.FlightDataDB.FlightDatas
+import com.example.apogemixconnect.model.Data.FlightDataDB.FlightDatasDao
 
 @Database(entities = [Flight::class, FlightDatas::class], version = 2, exportSchema = false)
 abstract class FlightDatabase: RoomDatabase() {
