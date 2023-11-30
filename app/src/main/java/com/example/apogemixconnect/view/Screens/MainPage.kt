@@ -1,9 +1,9 @@
-package com.example.apogemixconnect.ui.theme.Screens.MainPage
+package com.example.apogemixconnect.view.Screens.MainPage
 
+// Android and Compose imports
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
@@ -15,24 +15,16 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+
+// ViewModel imports
 import com.example.apogemixconnect.viewmodel.WebSocketViewModel
+
+// Resource and style imports
 import com.example.apogemixconnect.R
-
-
-// Define constants for colors and dimensions
-val  BackgroundColor = Color(0xFF00072e)
-private val  ButtonColor = Color(0xFF6A205E)
-private val  ButtonWidth = 280.dp
-private val  ButtonHeight = 50.dp
-private val  ButtonShape = RoundedCornerShape(20)
-private val LogoSize = 500.dp
+import com.example.apogemixconnect.ui.theme.Style.*
 
 @Composable
-fun MainPage(
-    viewModel: WebSocketViewModel,
-    navController: NavController,
-    onClick: (String) -> Unit = {}
-) {
+fun MainPage(viewModel: WebSocketViewModel, navController: NavController, onClick: (String) -> Unit = {}) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -47,7 +39,7 @@ fun MainPage(
             verticalArrangement = Arrangement.Center
         ) {
             LogoImage(painterResource(id = R.mipmap.apogemixlogo))
-            //tutaj doać łączenie z WiFi
+            // TODO: Dodaj funkcjonalność łączenia z WiFi
             InfoTextField()
             Spacer(modifier = Modifier.height(16.dp))
             LaunchButton(onClick = { onClick("ConnectionScreen") })
@@ -60,8 +52,7 @@ fun LogoImage(image: Painter) {
     Image(
         painter = image,
         contentDescription = "Logo",
-        modifier = Modifier
-            .size(LogoSize)
+        modifier = Modifier.size(LogoSize)
     )
 }
 
@@ -69,19 +60,18 @@ fun LogoImage(image: Painter) {
 fun InfoTextField() {
     Text(
         text = "Before launching the application, make sure you are connected to the Apogemix device.",
-        color = Color.White, 
+        color = Color.White,
         modifier = Modifier
             .padding(16.dp)
-            .width(ButtonWidth)
+            .width(300.dp)
     )
 }
-
 
 @Composable
 fun LaunchButton(onClick: () -> Unit) {
     Button(
         modifier = Modifier
-            .width(ButtonWidth)
+            .width(300.dp)
             .height(ButtonHeight)
             .padding(bottom = 1.dp),
         shape = ButtonShape,
@@ -91,9 +81,3 @@ fun LaunchButton(onClick: () -> Unit) {
         Text(text = "Launch App!")
     }
 }
-
-//@Preview(showBackground = true, device = Devices.PIXEL_4)
-//@Composable
-//fun MainPagePreview() {
-//    MainPage(viewModel = viewModel(), navController = rememberNavController())
-//}

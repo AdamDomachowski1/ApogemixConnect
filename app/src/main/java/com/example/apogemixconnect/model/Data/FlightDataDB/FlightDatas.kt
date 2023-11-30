@@ -14,7 +14,7 @@ data class FlightDatas(
     val gpsLat: Float,
     val gpsLng: Float,
     val gpsAlt: Float,
-    val time: Int,
+    val time: Float,
     val temperature: Float,
     val pressure: Float,
     val height: Float,

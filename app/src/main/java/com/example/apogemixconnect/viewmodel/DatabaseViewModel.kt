@@ -30,7 +30,7 @@ class DatabaseViewModel(app: Application) : AndroidViewModel(app) {
 
     init{
         CoroutineScope(Dispatchers.IO).launch {
-            repo.dropDatabase()
+            //repo.dropDatabase()
         }
     }
 
@@ -76,7 +76,7 @@ class DatabaseViewModel(app: Application) : AndroidViewModel(app) {
                 gpsLat = dataParts[0].toFloat(),
                 gpsLng = dataParts[1].toFloat(),
                 gpsAlt = dataParts[2].toFloat(),
-                time = dataParts[3].toInt(),
+                time = dataParts[3].toFloat(),
                 temperature = dataParts[4].toFloat(),
                 pressure = dataParts[5].toFloat(),
                 height = dataParts[6].toFloat(),
@@ -105,6 +105,9 @@ class DatabaseViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
+    fun getFlightDatasByUid(flightId: Int): Flow<List<FlightDatas>> {
+        return repo.getFlightDatasByUid(flightId)
+    }
 
 
 }

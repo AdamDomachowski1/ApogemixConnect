@@ -1,4 +1,4 @@
-package com.example.apogemixconnect.ui.theme.Screens.SendCommandScreen
+package com.example.apogemixconnect.view.Screens.SendCommandScreen
 
 // AndroidX and Compose imports
 import androidx.compose.foundation.layout.*
@@ -15,7 +15,8 @@ import androidx.navigation.NavController
 
 // Project specific imports
 import com.example.apogemixconnect.viewmodel.WebSocketViewModel
-import com.example.apogemixconnect.ui.theme.Screens.ConnectionScreen.ConnectionStatus
+import com.example.apogemixconnect.view.Screens.ConnectionScreen.ConnectionStatus
+
 
 @Composable
 fun SendCommandScreen(viewModel: WebSocketViewModel, navController: NavController, onClick: (String) -> Unit) {
@@ -28,6 +29,7 @@ fun SendCommandScreen(viewModel: WebSocketViewModel, navController: NavControlle
         //DisplayFlightData(viewModel)
     }
 }
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -45,6 +47,7 @@ fun InputField(defaultValue: String = "Test Message CODE 000XF"): MutableState<S
     )
     return text
 }
+
 
 @Composable
 fun CommandsButtons(viewModel: WebSocketViewModel) {

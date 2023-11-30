@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.apogemixconnect"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 33
         versionCode = 1
         versionName = "1.0"
@@ -52,21 +52,26 @@ android {
 
 dependencies {
 
+    //YCharts
+    implementation("co.yml:ycharts:2.1.0")
+
     // For Room
     val room_version = "2.4.3"
     implementation("androidx.room:room-runtime:$room_version")
     implementation("androidx.room:room-ktx:$room_version")
     annotationProcessor("androidx.room:room-compiler:$room_version")
+
     // To use Kotlin annotation processing tool (kapt)
     kapt("androidx.room:room-compiler:$room_version")
 
-    implementation("androidx.navigation:navigation-compose:2.7.4")
+    implementation("androidx.navigation:navigation-compose:2.7.5")
     implementation("com.squareup.okhttp3:okhttp:4.11.0")
     implementation("androidx.compose.runtime:runtime-livedata:1.5.3")
+    implementation ("androidx.compose.material:material:1.5.4")
 
     implementation("androidx.core:core-ktx:1.9.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
-    implementation("androidx.activity:activity-compose:1.8.0")
+    implementation("androidx.activity:activity-compose:1.8.1")
     implementation(platform("androidx.compose:compose-bom:2023.03.00"))
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-graphics")

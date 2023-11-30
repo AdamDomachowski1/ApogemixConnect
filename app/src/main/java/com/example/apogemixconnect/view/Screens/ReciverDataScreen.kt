@@ -1,4 +1,4 @@
-package com.example.apogemixconnect.ui.theme.Screens.ReciverDataScreen
+package com.example.apogemixconnect.view.Screens.ReciverDataScreen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.apogemixconnect.model.Data.FlightDB.Flight
 import com.example.apogemixconnect.viewmodel.WebSocketViewModel
-import com.example.apogemixconnect.ui.theme.Screens.ConnectionScreen.ConnectionStatus
+import com.example.apogemixconnect.view.Screens.ConnectionScreen.ConnectionStatus
 import com.example.apogemixconnect.viewmodel.DatabaseViewModel
 
 // Constants for UI Design
@@ -125,7 +125,6 @@ fun DropdownNameSelector(
                     .weight(3f)
                     .height(TextFieldHeight),
                 colors = TextFieldDefaults.outlinedTextFieldColors(
-                    textColor = Color.White,
                     cursorColor = Color.White,
                     focusedBorderColor = Color.White,
                     unfocusedBorderColor = Color.Gray,
@@ -155,7 +154,7 @@ fun DisplayFlightData(viewModel: WebSocketViewModel, name: String) {
     val dataMap by viewModel.dataMap.observeAsState(mapOf())
     val data = dataMap[name]?.split(";").orEmpty()
    Column(modifier = Modifier.padding(8.dp)) {
-       FlightRow("GPS Coordinates", value = if (data.isNotEmpty()) "${data[0]} ; ${data[1]}" else "N/A")
+       FlightRow("GPS Coordinates", value = if (data.isNotEmpty()) "${data[0]} ${data[1]}" else "N/A")
        FlightRow("GPS Altitude", value = if (data.isNotEmpty()) "${data[2]} m" else "N/A")
        FlightRow("Calibrated Altitude", value = if (data.isNotEmpty()) "${data[6]} m" else "N/A")
        FlightRow("Time", value = if (data.isNotEmpty()) "${data[3]} ms" else "N/A")
@@ -201,3 +200,4 @@ fun FlightRow(label: String, value: String){
         }
     }
 }
+
