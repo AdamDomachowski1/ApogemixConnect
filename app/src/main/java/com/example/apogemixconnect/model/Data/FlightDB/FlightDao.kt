@@ -19,5 +19,7 @@ interface FlightDao {
     fun getAll(): Flow<List<Flight>>
     @Query("DELETE FROM flights_table")
     suspend fun dropDatabase()
+    @Query("DELETE FROM flights_table WHERE uid = :flightId")
+    suspend fun deleteFlightById(flightId: Int)
 
 }

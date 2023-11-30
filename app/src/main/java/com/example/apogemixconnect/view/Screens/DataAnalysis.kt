@@ -14,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 
 // Navigation imports
 import androidx.navigation.NavController
@@ -44,8 +45,11 @@ fun DataAnalysis(
     viewModel: WebSocketViewModel,
     DBviewModel: DatabaseViewModel,
     navController: NavController,
-    UID: Int
+    UID: Int,
+    name: String,
+    date: String
 ) {
+    var deleteCommand = true
     val flightDatas by DBviewModel.getFlightDatasByUid(UID).collectAsState(initial = listOf())
     val points = remember(flightDatas) {
         mutableStateOf(createPointsList(flightDatas, { it.height }))
@@ -59,16 +63,57 @@ fun DataAnalysis(
     ) {
         Column {
             ConnectionStatus(viewModel, navController)
-            //FlightInfo()
-            DropDownMenu(points, flightDatas)
+            DropDownMenu(points, flightDatas, DBviewModel, UID)
+            FlightInfo(name,date)
             LineChartScreen(points.value)
         }
     }
 }
 
+@Composable
+fun FlightInfo(name: String, date: String) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp), // Dodatkowy padding dla całego wiersza, jeśli potrzebny
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Box(
+            modifier = Modifier
+                .background(Color.Gray) // Szare tło dla Box z tekstem
+                .padding(4.dp), // Padding wewnątrz Box
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = "Name: $name",
+                fontSize = 14.sp,
+                color = Color.White
+            )
+        }
+
+        Spacer(modifier = Modifier.width(16.dp))
+
+        Box(
+            modifier = Modifier
+                .background(Color.Gray) // Szare tło dla drugiego Box
+                .padding(4.dp), // Padding wewnątrz Box
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = "Date: $date",
+                fontSize = 14.sp,
+                color = Color.White
+            )
+        }
+    }
+}
+
+
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DropDownMenu(points: MutableState<List<Point>>, flightDatas: List<FlightDatas>) {
+fun DropDownMenu(points: MutableState<List<Point>>, flightDatas: List<FlightDatas>,DBviewModel: DatabaseViewModel, uid: Int) {
     var expandedY by remember { mutableStateOf(false) }
     val options = listOf("Altitude", "Speed", "Temperature", "Pressure")
     var selectedYIndex by remember { mutableStateOf(0) }
@@ -90,7 +135,7 @@ fun DropDownMenu(points: MutableState<List<Point>>, flightDatas: List<FlightData
                 modifier = Modifier.fillMaxWidth() // Zajmuje całą szerokość
             ) {
                 TextField(
-                    value = " Y: ${options[selectedYIndex]} ",
+                    value = " Yaxis: ${options[selectedYIndex]} ",
                     onValueChange = { },
                     readOnly = true,
                     trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedY) },
@@ -120,6 +165,15 @@ fun DropDownMenu(points: MutableState<List<Point>>, flightDatas: List<FlightData
                         )
                     }
                 }
+            }
+
+            Spacer(modifier = Modifier.width(16.dp))
+
+            Button(
+                onClick = { DBviewModel.deleteFlight(uid)},
+                modifier = Modifier.weight(1f)
+            ) {
+                Text(text = "Delete")
             }
         }
     }

@@ -109,5 +109,13 @@ class DatabaseViewModel(app: Application) : AndroidViewModel(app) {
         return repo.getFlightDatasByUid(flightId)
     }
 
+    fun deleteFlight(flightId: Int) {
+        viewModelScope.launch {
+            repo.deleteFlightById(flightId)
+        }
+    }
+
+
+
 
 }

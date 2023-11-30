@@ -12,9 +12,8 @@ import kotlinx.coroutines.withContext
 
 class DatabaseRepository(context: Context) : FlightDao, FlightDatasDao {
 
-    //tworzenie zmiennych przypisanych do typów danych w Baziedanych
+    // Inicjalizacja DAO
     private val daoFlight = FlightDb.getInstance(context).flightDao()
-
     private val daoDatasFlight = FlightDb.getInstance(context).flightDatasDao()
 
     // Metody dla FlightDao
@@ -34,6 +33,10 @@ class DatabaseRepository(context: Context) : FlightDao, FlightDatasDao {
 
     override suspend fun dropDatabase() = withContext(Dispatchers.IO) {
         daoFlight.dropDatabase()
+    }
+
+    override suspend fun deleteFlightById(flightId: Int) = withContext(Dispatchers.IO) {
+        daoFlight.deleteFlightById(flightId)
     }
 
     // Metody dla FlightDatasDao

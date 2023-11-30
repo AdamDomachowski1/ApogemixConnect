@@ -179,7 +179,7 @@ fun FlightRow(onClick: (String) -> Unit, flight : Flight) {
             .fillMaxWidth()
             .height(40.dp)
             .padding(1.dp)
-            .clickable{ onClick("DataAnalysis/${flight.uid}") },
+            .clickable{ onClick("DataAnalysis/${flight.uid}/${flight.name}/${flight.date}") },
         shape = RoundedCornerShape(10.dp),
 
         ){

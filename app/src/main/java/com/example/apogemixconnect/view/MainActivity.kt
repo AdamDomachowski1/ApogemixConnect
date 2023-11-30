@@ -45,11 +45,20 @@ class MainActivity : ComponentActivity() {
                     })
                 }
 
-                composable("dataAnalysis/{uid}",
-                    arguments = listOf(navArgument("uid") { type = NavType.IntType })
+                composable(
+                    "dataAnalysis/{uid}/{name}/{date}",
+                    arguments = listOf(
+                        navArgument("uid") { type = NavType.IntType },
+                        navArgument("name") { type = NavType.StringType },
+                        navArgument("date") { type = NavType.StringType }
+                    )
                 ) { backStackEntry ->
                     val uid = backStackEntry.arguments?.getInt("uid") ?: -1
-                    DataAnalysis(viewModel, DBviewModel, navController, uid)
+                    val name = backStackEntry.arguments?.getString("name") ?: ""
+                    val date = backStackEntry.arguments?.getString("date") ?: ""
+
+                    // Teraz możesz przekazać te parametry do Composable "DataAnalysis"
+                    DataAnalysis(viewModel, DBviewModel, navController, uid, name, date)
                 }
 
                 composable("ConnectionScreen") {
