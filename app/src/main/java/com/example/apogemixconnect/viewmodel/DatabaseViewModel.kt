@@ -79,7 +79,7 @@ class DatabaseViewModel(app: Application) : AndroidViewModel(app) {
                 time = dataParts[3].toFloat(),
                 temperature = dataParts[4].toFloat(),
                 pressure = dataParts[5].toFloat(),
-                height = dataParts[6].toFloat(),
+                altitude = dataParts[6].toFloat(),
                 speed = dataParts[7].toFloat(),
                 continuity = dataParts[8].toInt(),
                 state = dataParts[9].toInt()

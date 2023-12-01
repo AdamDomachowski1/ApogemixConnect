@@ -21,10 +21,6 @@ class DatabaseRepository(context: Context) : FlightDao, FlightDatasDao {
         daoFlight.insert(flight)
     }
 
-    override suspend fun delete(flights: List<Flight>) = withContext(Dispatchers.IO) {
-        daoFlight.delete(flights)
-    }
-
     override suspend fun update(flights: Flight) = withContext(Dispatchers.IO) {
         daoFlight.update(flights)
     }
@@ -37,6 +33,7 @@ class DatabaseRepository(context: Context) : FlightDao, FlightDatasDao {
 
     override suspend fun deleteFlightById(flightId: Int) = withContext(Dispatchers.IO) {
         daoFlight.deleteFlightById(flightId)
+        //an once delete all data parameters connected with this
     }
 
     // Metody dla FlightDatasDao
@@ -44,17 +41,6 @@ class DatabaseRepository(context: Context) : FlightDao, FlightDatasDao {
         daoDatasFlight.insertFlightData(flightData)
     }
 
-    override suspend fun insertAllFlightData(flightDataList: List<FlightDatas>) = withContext(Dispatchers.IO) {
-        daoDatasFlight.insertAllFlightData(flightDataList)
-    }
-
-    override suspend fun deleteFlightData(flightData: FlightDatas) = withContext(Dispatchers.IO) {
-        daoDatasFlight.deleteFlightData(flightData)
-    }
-
-    override suspend fun updateFlightData(flightData: FlightDatas) = withContext(Dispatchers.IO) {
-        daoDatasFlight.updateFlightData(flightData)
-    }
 
     override fun getFlightDatasByUid(flightId: Int): Flow<List<FlightDatas>> = daoDatasFlight.getFlightDatasByUid(flightId)
 }

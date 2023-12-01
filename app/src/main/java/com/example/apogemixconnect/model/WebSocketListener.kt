@@ -24,7 +24,7 @@ class WebSocketListener(
     override fun onMessage(webSocket: WebSocket, text: String) {
         super.onMessage(webSocket, text)
         viewModel.updateDataInDataMap(text)
-        Log.d(TAG, "onMessage: $text")
+        //Log.d(TAG, "onMessage: $text")
     }
 
     override fun onClosing(webSocket: WebSocket, code: Int, reason: String) {
@@ -44,6 +44,7 @@ class WebSocketListener(
     }
 
     suspend fun changeFrequency(freqMHz: Int): Boolean {
+        Log.d(TAG, "Freqency Change")
         val client = OkHttpClient()
         val url = "http://192.168.4.1/?freqmhz=$freqMHz"
         val request = Request.Builder().url(url).build()

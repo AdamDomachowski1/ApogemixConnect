@@ -59,7 +59,7 @@ class WebSocketViewModel : ViewModel() {
         }
     }
 
-    fun changeFrequency(freqMHz: Int) = viewModelScope.launch {
+    fun changeFrequency(freqMHz: Int) = viewModelScope.launch(Dispatchers.IO){
         if (_socketStatus.value == true) {
             val success = webSocketListener.changeFrequency(freqMHz)
             if (success) {

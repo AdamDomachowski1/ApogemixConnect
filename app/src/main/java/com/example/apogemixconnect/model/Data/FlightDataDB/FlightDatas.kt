@@ -7,9 +7,20 @@ import androidx.room.PrimaryKey
 import com.example.apogemixconnect.model.Data.FlightDB.Flight
 
 
-@Entity(tableName = "flightDatas_table")
+@Entity(
+    tableName = "flightDatas_table",
+    foreignKeys = [
+        ForeignKey(
+            entity = Flight::class,
+            parentColumns = arrayOf("uid"),
+            childColumns = arrayOf("flightId"),
+            onDelete = ForeignKey.CASCADE
+        )
+    ],
+    indices = [Index(value = ["flightId"])]
+)
 data class FlightDatas(
-    @PrimaryKey(autoGenerate = true) val dataId: Int = 0, //unike Id
+    @PrimaryKey(autoGenerate = true) val dataId: Int = 0,
     val flightId: Int,
     val gpsLat: Float,
     val gpsLng: Float,
@@ -17,7 +28,7 @@ data class FlightDatas(
     val time: Float,
     val temperature: Float,
     val pressure: Float,
-    val height: Float,
+    val altitude: Float,
     val speed: Float,
     val continuity: Int,
     val state: Int,

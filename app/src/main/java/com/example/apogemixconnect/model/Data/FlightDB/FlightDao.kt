@@ -11,8 +11,6 @@ import kotlinx.coroutines.flow.Flow
 interface FlightDao {
     @Insert
     suspend fun insert(flight: Flight): Long
-    @Delete
-    suspend fun delete(flights: List<Flight>)
     @Update
     suspend fun update(flights: Flight)
     @Query("SELECT * FROM flights_table")
