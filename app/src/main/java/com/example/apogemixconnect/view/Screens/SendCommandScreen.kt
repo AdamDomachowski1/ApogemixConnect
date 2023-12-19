@@ -25,6 +25,8 @@ import com.example.apogemixconnect.ui.theme.Style.ButtonColor
 import com.example.apogemixconnect.ui.theme.Style.ButtonShape
 import com.example.apogemixconnect.ui.theme.Style.TextFieldHeight
 import androidx.compose.material3.*
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.text.input.TextFieldValue
 import co.yml.charts.common.model.Point
 import com.example.apogemixconnect.model.Data.FlightDataDB.FlightDatas
 
@@ -34,14 +36,18 @@ import com.example.apogemixconnect.view.Screens.ConnectionScreen.ConnectionStatu
 import com.example.apogemixconnect.ui.theme.Style.*
 import com.example.apogemixconnect.view.Screens.DataAnalysis.createPointsList
 import com.example.apogemixconnect.view.Screens.DataAnalysis.getYValue
+import com.example.apogemixconnect.viewmodel.DatabaseViewModel
 
 @Composable
 fun SendCommandScreen(
     viewModel: WebSocketViewModel,
+    DBviewModel: DatabaseViewModel,
     navController: NavController,
     onClick: (String) -> Unit
 ) {
-    val inputText = remember { mutableStateOf("443") }
+    val dataMap by viewModel.dataMap.observeAsState(mapOf())
+    val namesList = dataMap.keys.toList()
+    var selectedName by remember { mutableStateOf(namesList.firstOrNull().orEmpty()) }
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -54,15 +60,18 @@ fun SendCommandScreen(
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             ConnectionStatus(viewModel, navController)
-            FrequencyInputBox(inputText, viewModel)
-            CommandBox(viewModel)
-            TestButtonsBox(viewModel)
+            DropdownDeviceNameSelector(DBviewModel, namesList, selectedName) { name -> selectedName = name }
+            FrequencyInputBox(viewModel)
+            CommandBox(selectedName, viewModel)
+            TestButtonsBox(selectedName, viewModel)
         }
     }
 }
 
 @Composable
-fun CommandBox(viewModel: WebSocketViewModel) {
+fun CommandBox(selectedName: String, viewModel: WebSocketViewModel) {
+    val options = listOf("MOS_ON", "MOS_OFF", "MOS_CLK", "RECALIBRATE")
+    var selectedYIndex by remember { mutableStateOf(0) }
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -70,25 +79,66 @@ fun CommandBox(viewModel: WebSocketViewModel) {
             .padding(12.dp),
     ) {
         Column {
-            DropDownMenu()
-            SendCommandButton(viewModel)
+            DropDownMenu(options, selectedYIndex) { newIndex ->
+                selectedYIndex = newIndex
+            }
+            SendCommandButton(selectedName, options, selectedYIndex, viewModel)
         }
     }
 }
 
 @Composable
-fun SendCommandButton(viewModel: WebSocketViewModel) {
+fun SendCommandButton(selectedName: String, options: List<String>, selectedYIndex: Int, viewModel: WebSocketViewModel) {
+    val showDialog = remember { mutableStateOf(false) }
+    val confirmText = remember { mutableStateOf("") }
+
     Button(
-        onClick = { viewModel.changeFrequency(443) },
+        onClick = { showDialog.value = true },
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(25),
     ) {
         Text("SEND COMMAND")
     }
+
+    if (showDialog.value) {
+        AlertDialog(
+            onDismissRequest = { showDialog.value = false },
+            title = { Text("Confirm Command") },
+            text = {
+                Column {
+                    Text("Type 'confirm' to send command:")
+                    Spacer(modifier = Modifier.height(8.dp))
+                    TextField(
+                        value = confirmText.value,
+                        onValueChange = { confirmText.value = it },
+                        singleLine = true
+                    )
+                }
+            },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        if (confirmText.value.lowercase() == "confirm") {
+                            viewModel.sendCommand(selectedName, options[selectedYIndex])
+                            showDialog.value = false
+                        }
+                    }
+                ) {
+                    Text("Confirm")
+                }
+            },
+            dismissButton = {
+                Button(onClick = { showDialog.value = false }) {
+                    Text("Cancel")
+                }
+            }
+        )
+    }
 }
 
+
 @Composable
-fun TestButtonsBox(viewModel: WebSocketViewModel) {
+fun TestButtonsBox(selectedName: String, viewModel: WebSocketViewModel) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -96,26 +146,66 @@ fun TestButtonsBox(viewModel: WebSocketViewModel) {
             .padding(12.dp),
     ) {
         Column {
-            TestButton("TEST 1", viewModel)
-            TestButton("TEST 2", viewModel)
+            TestButton("TEST 1",selectedName, "TEST1" ,viewModel)
+            TestButton("TEST 2",selectedName, "TEST2" ,viewModel)
         }
     }
 }
 
 @Composable
-fun TestButton(text: String, viewModel: WebSocketViewModel) {
+fun TestButton(text: String, selectedName: String, command: String, viewModel: WebSocketViewModel) {
+    val showDialog = remember { mutableStateOf(false) }
+    val confirmText = remember { mutableStateOf("") }
+
     Button(
-        onClick = { viewModel.changeFrequency(443) },
+        onClick = { showDialog.value = true },
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(25),
     ) {
         Text(text)
     }
+
+    if (showDialog.value) {
+        AlertDialog(
+            onDismissRequest = { showDialog.value = false },
+            title = { Text("Confirm Command") },
+            text = {
+                Column {
+                    Text("Type 'confirm' to send command:")
+                    Spacer(modifier = Modifier.height(8.dp))
+                    TextField(
+                        value = confirmText.value,
+                        onValueChange = { confirmText.value = it },
+                        singleLine = true
+                    )
+                }
+            },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        if (confirmText.value.lowercase() == "confirm") {
+                            viewModel.sendCommand(selectedName, command)
+                            showDialog.value = false
+                        }
+                    }
+                ) {
+                    Text("Confirm")
+                }
+            },
+            dismissButton = {
+                Button(onClick = { showDialog.value = false }) {
+                    Text("Cancel")
+                }
+            }
+        )
+    }
 }
 
 
+
 @Composable
-fun FrequencyInputBox(inputText: MutableState<String>, viewModel: WebSocketViewModel) {
+fun FrequencyInputBox(viewModel: WebSocketViewModel) {
+    val inputText = remember { mutableStateOf("443") }
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -125,7 +215,7 @@ fun FrequencyInputBox(inputText: MutableState<String>, viewModel: WebSocketViewM
     ) {
         Column {
             FrequencyInputField(inputText)
-            SetFrequencyButton(viewModel)
+            SetFrequencyButton(viewModel, inputText)
         }
     }
 }
@@ -152,23 +242,59 @@ fun FrequencyInputField(inputText: MutableState<String>) {
 }
 
 @Composable
-fun SetFrequencyButton(viewModel: WebSocketViewModel) {
+fun SetFrequencyButton(viewModel: WebSocketViewModel, inputText: MutableState<String>) {
+    val showDialog = remember { mutableStateOf(false) }
+    val confirmText = remember { mutableStateOf("") }
+
     Button(
-        onClick = { viewModel.changeFrequency(443) },
+        onClick = { showDialog.value = true },
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(25),
     ) {
         Text("Set Frequency")
     }
+
+    if (showDialog.value) {
+        AlertDialog(
+            onDismissRequest = { showDialog.value = false },
+            title = { Text("Confirm Frequency Change to ${inputText.value}") },
+            text = {
+                Column {
+                    Text("Type 'confirm' to change frequency:")
+                    Spacer(modifier = Modifier.height(8.dp))
+                    TextField(
+                        value = confirmText.value,
+                        onValueChange = { confirmText.value = it },
+                        singleLine = true
+                    )
+                }
+            },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        if (confirmText.value.lowercase() == "confirm") {
+                            viewModel.changeFrequency(inputText.value.toInt())
+                            showDialog.value = false
+                        }
+                    }
+                ) {
+                    Text("Confirm")
+                }
+            },
+            dismissButton = {
+                Button(onClick = { showDialog.value = false }) {
+                    Text("Cancel")
+                }
+            }
+        )
+    }
 }
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DropDownMenu() {
+fun DropDownMenu(options: List<String>, selectedYIndex: Int, onOptionSelected: (Int) -> Unit) {
     var expandedY by remember { mutableStateOf(false) }
-    val options = listOf("MOS_ON", "MOS_OFF", "MOS_CLK", "RECALIBRATE")
-    var selectedYIndex by remember { mutableStateOf(0) }
-
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -178,7 +304,6 @@ fun DropDownMenu() {
                 .fillMaxWidth()
                 .align(Alignment.CenterHorizontally)
         ) {
-            // Menu dla osi Y
             ExposedDropdownMenuBox(
                 expanded = expandedY,
                 onExpandedChange = { expandedY = !expandedY },
@@ -204,10 +329,72 @@ fun DropDownMenu() {
                     options.forEachIndexed { index, option ->
                         DropdownMenuItem(
                             onClick = {
-                                selectedYIndex = index
+                                onOptionSelected(index)
                                 expandedY = false
                             },
                             text = { Text(text = option) }
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun DropdownDeviceNameSelector(
+    DBviewModel: DatabaseViewModel,
+    namesList: List<String>,
+    selectedName: String,
+    onSelectionChange: (String) -> Unit,
+) {
+    var expanded by remember { mutableStateOf(false) }
+    var selectedNameState by remember { mutableStateOf(selectedName) }
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(Color.DarkGray, shape = RoundedCornerShape(10.dp))
+            .padding(12.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(4.dp)
+        ) {
+            ExposedDropdownMenuBox(
+                expanded = expanded,
+                onExpandedChange = { expanded = !expanded },
+                modifier = Modifier
+                    .height(TextFieldHeight)
+                    .fillMaxWidth()
+            ) {
+                TextField(
+                    value = selectedNameState,
+                    onValueChange = { selectedNameState = it },
+                    readOnly = true,
+                    trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .menuAnchor()
+                )
+
+                ExposedDropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = { expanded = false },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                ) {
+                    namesList.forEach { name ->
+                        DropdownMenuItem(
+                            onClick = {
+                                selectedNameState = name
+                                expanded = false
+                                onSelectionChange(name)
+                            },
+                            text = { Text(text = name) }
                         )
                     }
                 }

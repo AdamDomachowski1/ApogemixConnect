@@ -1,6 +1,7 @@
 package com.example.apogemixconnect.view.Screens.ConnectionScreen
 
 // Android imports
+import android.widget.Space
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -34,6 +35,7 @@ fun ConnectionScreen(viewModel: WebSocketViewModel, DBviewModel: DatabaseViewMod
         modifier = Modifier
             .fillMaxSize()
             .background(BackgroundColor)
+            .padding(8.dp)
     ) {
         Column(
             modifier = Modifier.fillMaxSize(),
@@ -57,7 +59,7 @@ fun ConnectionStatus(viewModel: WebSocketViewModel, navController: NavController
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(BoxHeight),
+            .height(50.dp),
         contentAlignment = Alignment.CenterStart
     ) {
         Row(
@@ -72,12 +74,14 @@ fun ConnectionStatus(viewModel: WebSocketViewModel, navController: NavController
                     .size(ArrowIconSize),
                 tint = Color(0xFF82C2F0)
             )
+
+            Spacer(modifier = Modifier.width(10.dp))
+
             Text(
                 text = statusText,
                 color = Color.White,
                 modifier = Modifier
                     .weight(1f)
-                    .padding(start = HorizontalPadding)
             )
             Spacer(modifier = Modifier.width(SpacerWidth))
         }
@@ -94,7 +98,7 @@ fun ConnectionInputs(viewModel: WebSocketViewModel) {
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp)
+            .padding(top = 8.dp, bottom = 8.dp),
     ) {
         TextField(
             modifier = Modifier
@@ -130,24 +134,25 @@ fun NavigateButtons(onClick: (String) -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp)
+            .padding(top = 8.dp, bottom = 8.dp)
     ) {
         Button(
             modifier = Modifier
                 .weight(1f)
-                .height(TextFieldHeight)
-                .padding(end = 4.dp),
+                .height(TextFieldHeight),
             shape = ButtonShape,
             colors = ButtonDefaults.buttonColors(containerColor = ButtonColor),
             onClick = { onClick("ReciverDataScreen") }
         ) {
             Text(text = "Data Receiver")
         }
+
+        Spacer(modifier = Modifier.width(10.dp))
+
         Button(
             modifier = Modifier
                 .weight(1f)
-                .height(TextFieldHeight)
-                .padding(start = 4.dp),
+                .height(TextFieldHeight),
             shape = ButtonShape,
             colors = ButtonDefaults.buttonColors(containerColor = ButtonColor),
             onClick = { onClick("SendCommandScreen") }
@@ -162,7 +167,7 @@ fun NavigateButtons(onClick: (String) -> Unit) {
 fun FlightLazyColumn(onClick: (String) -> Unit, flights: List<Flight>) {
     LazyColumn(
         modifier = Modifier
-            .padding(8.dp)
+            .padding(top = 8.dp, bottom = 8.dp)
     ){
         items(items = flights, key = {it.uid}){flight ->
             FlightRow(onClick, flight)
@@ -177,9 +182,9 @@ fun FlightRow(onClick: (String) -> Unit, flight : Flight) {
     Surface (
         modifier = Modifier
             .fillMaxWidth()
-            .height(40.dp)
-            .padding(1.dp)
-            .clickable{ onClick("DataAnalysis/${flight.uid}/${flight.name}/${flight.date}") },
+            .height(45.dp)
+            .padding(2.dp)
+            .clickable { onClick("DataAnalysis/${flight.uid}/${flight.name}/${flight.date}") },
         shape = RoundedCornerShape(10.dp),
 
         ){

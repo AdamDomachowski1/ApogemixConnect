@@ -17,7 +17,7 @@ class WebSocketListener(
     override fun onOpen(webSocket: WebSocket, response: Response) {
         super.onOpen(webSocket, response)
         viewModel.setStatus(true)
-        webSocket.send("Android Device Connected")
+        webSocket.send("Device Connected")
         Log.d(TAG, "onOpen:")
     }
 
@@ -48,7 +48,6 @@ class WebSocketListener(
         val client = OkHttpClient()
         val url = "http://192.168.4.1/?freqmhz=$freqMHz"
         val request = Request.Builder().url(url).build()
-
         return client.newCall(request).execute().use { response ->
             response.isSuccessful
         }

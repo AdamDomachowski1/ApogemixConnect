@@ -1,6 +1,7 @@
 package com.example.apogemixconnect.view.Screens.MainPage
 
 // Android and Compose imports
+import android.content.Intent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -12,9 +13,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import android.provider.Settings
 
 // ViewModel imports
 import com.example.apogemixconnect.viewmodel.WebSocketViewModel
@@ -39,11 +42,30 @@ fun MainPage(viewModel: WebSocketViewModel, navController: NavController, onClic
             verticalArrangement = Arrangement.Center
         ) {
             LogoImage(painterResource(id = R.mipmap.apogemixlogo))
-            // TODO: Dodaj funkcjonalność łączenia z WiFi
             InfoTextField()
+            Spacer(modifier = Modifier.height(16.dp))
+            SettingsButton(navController)
             Spacer(modifier = Modifier.height(16.dp))
             LaunchButton(onClick = { onClick("ConnectionScreen") })
         }
+    }
+}
+
+@Composable
+fun SettingsButton(navController: NavController) {
+    val context = LocalContext.current
+    Button(
+        modifier = Modifier
+            .width(300.dp)
+            .height(ButtonHeight)
+            .padding(bottom = 1.dp),
+        shape = ButtonShape,
+        colors = ButtonDefaults.buttonColors(containerColor = ButtonColor),
+        onClick = {
+            context.startActivity(Intent(Settings.ACTION_WIFI_SETTINGS))
+        }
+    ) {
+        Text(text = "WiFi Settings")
     }
 }
 

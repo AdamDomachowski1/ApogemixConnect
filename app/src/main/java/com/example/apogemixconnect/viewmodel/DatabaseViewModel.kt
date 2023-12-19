@@ -20,17 +20,16 @@ import java.time.format.DateTimeFormatter
 import java.util.concurrent.TimeUnit
 
 class DatabaseViewModel(app: Application) : AndroidViewModel(app) {
+
     val repo = DatabaseRepository(app.applicationContext)
 
     val dataMap: LiveData<Map<String, String>> = DataMapRepository.dataMap
 
     private val _nowRecording = mutableListOf<String>()
-    // Public read-only view of nowRecording
     val nowRecording: List<String> = _nowRecording
 
     init{
         CoroutineScope(Dispatchers.IO).launch {
-            //repo.dropDatabase()
         }
     }
 
@@ -43,7 +42,6 @@ class DatabaseViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun isStringInList(stringToCheck: String): Boolean {
-        // No need to switch to the main thread as we are only reading the list
         return _nowRecording.contains(stringToCheck)
     }
 
@@ -58,7 +56,6 @@ class DatabaseViewModel(app: Application) : AndroidViewModel(app) {
         val flight = Flight(name = name, date = formattedDate)
         CoroutineScope(viewModelScope.coroutineContext).launch {
             val id = repo.insert(flight)
-            Log.d("XD", "$id")
             recordDataWhileNameIsRecording(name, id.toInt())
         }
     }

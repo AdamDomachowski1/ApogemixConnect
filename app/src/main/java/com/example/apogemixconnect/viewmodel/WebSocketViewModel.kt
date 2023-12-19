@@ -17,18 +17,19 @@ class WebSocketViewModel : ViewModel() {
     private val _socketStatus = MutableLiveData(false)
     val socketStatus: LiveData<Boolean> = _socketStatus
 
-    private val okHttpClient = OkHttpClient()
+    var okHttpClient = OkHttpClient()
 
-    private var webSocket: WebSocket? = null
+    var webSocket: WebSocket? = null
 
-    private val webSocketListener = WebSocketListener(this)
+    var webSocketListener = WebSocketListener(this)
 
     val dataMap: LiveData<Map<String, String>> = DataMapRepository.dataMap
 
     // Connect Function
     fun connect(url: String) {
         if (!_socketStatus.value!!) { // Tylko jeśli połączenie nie jest aktywne
-            webSocket = okHttpClient.newWebSocket(createRequest(url), webSocketListener)
+            webSocket = okHttpClient
+                .newWebSocket(createRequest(url), webSocketListener)
             Log.d("CUSTOM_TAG","Connection Try")
         }
     }
@@ -40,8 +41,8 @@ class WebSocketViewModel : ViewModel() {
     }
 
     // Send Command Function
-    fun sendCommand(command: String) {
-        webSocket?.send(command)
+    fun sendCommand(device_name: String, command: String) {
+        webSocket?.send("${device_name};${command}")
     }
 
     private fun createRequest(adress: String): Request {

@@ -38,6 +38,8 @@ class MainActivity : ComponentActivity() {
             val navController = rememberNavController()
 
             NavHost(navController = navController, startDestination = "MainPage") {
+
+
                 // Definicje tras nawigacyjnych
                 composable("MainPage") {
                     MainPage(viewModel, navController, onClick = {
@@ -45,8 +47,8 @@ class MainActivity : ComponentActivity() {
                     })
                 }
 
-                composable(
-                    "dataAnalysis/{uid}/{name}/{date}",
+
+                composable("dataAnalysis/{uid}/{name}/{date}",
                     arguments = listOf(
                         navArgument("uid") { type = NavType.IntType },
                         navArgument("name") { type = NavType.StringType },
@@ -61,11 +63,13 @@ class MainActivity : ComponentActivity() {
                     DataAnalysis(viewModel, DBviewModel, navController, uid, name, date)
                 }
 
+
                 composable("ConnectionScreen") {
                     ConnectionScreen(viewModel, DBviewModel, navController, onClick = {
                         navController.navigate(it)
                     })
                 }
+
 
                 composable("ReciverDataScreen") {
                     ReciverDataScreen(viewModel, DBviewModel, navController, onClick = {
@@ -73,8 +77,9 @@ class MainActivity : ComponentActivity() {
                     })
                 }
 
+
                 composable("SendCommandScreen") {
-                    SendCommandScreen(viewModel, navController, onClick = {
+                    SendCommandScreen(viewModel,DBviewModel, navController, onClick = {
                         navController.navigate(it)
                     })
                 }

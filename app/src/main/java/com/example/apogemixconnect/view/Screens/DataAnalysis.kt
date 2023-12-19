@@ -43,6 +43,8 @@ import com.example.apogemixconnect.ui.theme.Style.*
 import com.example.apogemixconnect.view.Screens.ConnectionScreen.ConnectionStatus
 import com.example.apogemixconnect.viewmodel.WebSocketViewModel
 
+
+
 @Composable
 fun DataAnalysis(
     viewModel: WebSocketViewModel,
@@ -67,7 +69,7 @@ fun DataAnalysis(
         Column {
             ConnectionStatus(viewModel, navController)
             DropDownMenu(points, flightDatas)
-            FlightInfo(name,date, DBviewModel, UID)
+            FlightInfo(name, date, DBviewModel, UID)
             LineChartScreen(points.value)
         }
     }
@@ -124,7 +126,7 @@ fun FlightInfo(name: String, date: String, DBviewModel: DatabaseViewModel, uid: 
             contentAlignment = Alignment.Center,
             modifier = Modifier
                 .clip(RoundedCornerShape(25))
-                .background(Color.Gray) // Szare tło
+                .background(Color.Gray)
                 .weight(3f)
                 .height(40.dp)
         ) {
@@ -150,9 +152,6 @@ fun FlightInfo(name: String, date: String, DBviewModel: DatabaseViewModel, uid: 
     }
 }
 
-
-
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DropDownMenu(points: MutableState<List<Point>>, flightDatas: List<FlightDatas>) {
@@ -170,7 +169,6 @@ fun DropDownMenu(points: MutableState<List<Point>>, flightDatas: List<FlightData
                 .padding(16.dp)
                 .align(Alignment.CenterHorizontally)
         ) {
-            // Menu dla osi Y
             ExposedDropdownMenuBox(
                 expanded = expandedY,
                 onExpandedChange = { expandedY = !expandedY },
@@ -219,11 +217,9 @@ fun LineChartScreen(pointsData: List<Point>) {
             .padding(16.dp)
     ) {
         if (pointsData.isNotEmpty()) {
-            // Znajdowanie maksymalnej i minimalnej wartości Y
             val maxY = pointsData.maxOfOrNull { it.y } ?: 0f
             val minY = pointsData.minOfOrNull { it.y } ?: 0f
 
-            // Inicjalizacja danych osi X
             val xAxisData = AxisData.Builder()
                 .axisStepSize(100.dp)
                 .steps(pointsData.size - 1)
@@ -231,17 +227,15 @@ fun LineChartScreen(pointsData: List<Point>) {
                 .labelAndAxisLinePadding(15.dp)
                 .build()
 
-            // Inicjalizacja danych osi Y
             val yAxisData = AxisData.Builder()
-                .steps(5) // Liczba kroków (można dostosować)
+                .steps(5)
                 .labelAndAxisLinePadding(20.dp)
                 .labelData { i ->
                     val labelValue = minY + (maxY - minY) / 5 * i
-                    String.format("%.2f", labelValue) // Formatowanie wartości do dwóch miejsc po przecinku
+                    String.format("%.2f", labelValue)
                 }
                 .build()
 
-            // Inicjalizacja danych wykresu liniowego
             val lineChartData = LineChartData(
                 linePlotData = LinePlotData(
                     lines = listOf(
@@ -263,7 +257,6 @@ fun LineChartScreen(pointsData: List<Point>) {
                 backgroundColor = Color.White
             )
 
-            // Renderowanie wykresu liniowego z dostarczonymi danymi
             LineChart(
                 modifier = Modifier
                     .fillMaxSize()
@@ -278,7 +271,7 @@ fun LineChartScreen(pointsData: List<Point>) {
 
 fun createPointsList(flightDatas: List<FlightDatas>, getYValue: (FlightDatas) -> Float): List<Point> {
     return flightDatas.map { flightData ->
-        val timeInSeconds = flightData.time / 1000f // Konwersja na sekundy
+        val timeInSeconds = flightData.time / 1000f
         val point = Point(
             x = timeInSeconds,
             y = getYValue(flightData)
@@ -293,7 +286,7 @@ fun getYValue(flightData: FlightDatas, selectedYIndex: Int): Float {
         0 -> flightData.altitude
         1 -> flightData.speed
         2 -> flightData.temperature
-        3 -> flightData.pressure
-        else -> 0f // Domyślna wartość lub inna logika
+        else -> 0f
     }
 }
+

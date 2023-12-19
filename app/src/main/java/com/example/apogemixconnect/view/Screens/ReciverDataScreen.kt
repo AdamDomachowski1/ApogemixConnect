@@ -67,17 +67,41 @@ fun DropdownNameSelector(
     var expanded by remember { mutableStateOf(false) }
     var selectedNameState by remember { mutableStateOf(selectedName) }
 
-    Column(
+    Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(4.dp)
     ) {
+
+
+        Button(
+            modifier = Modifier
+                .weight(1f)
+                .height(55.dp),
+            shape = RoundedCornerShape(5.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = if (DBviewModel.isStringInList(selectedName)) Color.Red else Color.DarkGray
+            ),
+            onClick = {
+                if (DBviewModel.isStringInList(selectedName)) {
+                    DBviewModel.removeFromNowRecording(selectedName)
+                } else {
+                    DBviewModel.addToDatabase(selectedName)
+                    DBviewModel.addToNowRecording(selectedName)
+                }
+            }
+        ) {
+            Text(text = if (DBviewModel.isStringInList(selectedName)) "END" else "REC")
+        }
+
+        Spacer(modifier = Modifier.width(10.dp))
+
         ExposedDropdownMenuBox(
             expanded = expanded,
             onExpandedChange = { expanded = !expanded },
             modifier = Modifier
                 .height(TextFieldHeight)
-                .fillMaxWidth()
+                .weight(3f)
         ) {
             TextField(
                 value = selectedNameState,
@@ -106,28 +130,6 @@ fun DropdownNameSelector(
                     )
                 }
             }
-        }
-
-        Spacer(modifier = Modifier.height(10.dp))
-
-        Button(
-            modifier = Modifier
-                .width(100.dp)
-                .align(Alignment.Start),
-            shape = RoundedCornerShape(5.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = if (DBviewModel.isStringInList(selectedName)) Color.Red else Color.DarkGray
-            ),
-            onClick = {
-                if (DBviewModel.isStringInList(selectedName)) {
-                    DBviewModel.removeFromNowRecording(selectedName)
-                } else {
-                    DBviewModel.addToDatabase(selectedName)
-                    DBviewModel.addToNowRecording(selectedName)
-                }
-            }
-        ) {
-            Text(text = if (DBviewModel.isStringInList(selectedName)) "END" else "REC")
         }
     }
 }
